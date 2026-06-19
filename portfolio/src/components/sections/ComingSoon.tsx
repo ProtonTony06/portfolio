@@ -4,18 +4,15 @@ import { ThemeToggle } from "../ui/ThemeToggle";
 import { NotifyForm } from "../ui/NotifyForm";
 
 /**
- * Web3Forms Access Key.
+ * Endpoint de Formspree para el formulario de notificación.
  *
- * Pasos para activarlo:
- *   1. Entra en https://web3forms.com/
- *   2. Crea una cuenta con antoniocuevaslopez@proton.me
- *   3. Copia el "Access Key" que te dan
- *   4. Pégalo aquí abajo (reemplaza "TU_ACCESS_KEY_AQUI")
+ * El plan gratis de Formspree permite 50 envíos/mes, más que suficiente
+ * para un portfolio personal. Los emails llegan directamente a
+ * antoniocuevaslopez@proton.me (la cuenta con la que se creó el form).
  *
- * Mientras esté vacío, el formulario muestra un placeholder en lugar
- * del input — el sitio sigue funcionando sin enviar nada.
+ * Si en el futuro rotas la clave, solo cambia esta constante.
  */
-const WEB3FORMS_ACCESS_KEY = "TU_ACCESS_KEY_AQUI";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvzneper";
 
 export function ComingSoon() {
   return (
@@ -62,7 +59,7 @@ export function ComingSoon() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-10 w-full"
         >
-          <NotifyForm webhookKey={WEB3FORMS_ACCESS_KEY} />
+          <NotifyForm endpoint={FORMSPREE_ENDPOINT} />
         </motion.div>
 
         <motion.div

@@ -16,7 +16,7 @@ definitiva con Hero, Sobre mí, Proyectos destacados, Stack/Skills/CV y Contacto
 - **Tailwind CSS 3** (utility-first + variables CSS para tema claro/oscuro)
 - **framer-motion 11** (animaciones de entrada y scroll)
 - **lucide-react** (iconos SVG)
-- **Web3Forms** (formulario de notificación sin backend)
+- **Formspree** (formulario de notificación, 50 envíos/mes gratis)
 
 ## Estructura
 
@@ -54,17 +54,13 @@ npm run build        # build de producción en /dist
 npm run preview      # previsualizar el build
 ```
 
-## Activar formulario de notificación
+## Formulario de notificación
 
-Por defecto, el formulario muestra un placeholder (porque la Web3Forms Access Key
-aún no está configurada). Para activarlo:
+El formulario usa [Formspree](https://formspree.io) (plan gratis: 50 envíos/mes).
+Los emails llegan directamente a `antoniocuevaslopez@proton.me`.
 
-1. Crea una cuenta en [Web3Forms](https://web3forms.com/) con
-   `antoniocuevaslopez@proton.me`.
-2. Copia el **Access Key** que te proporcionan.
-3. Pégalo en `src/components/sections/ComingSoon.tsx`, en la constante
-   `WEB3FORMS_ACCESS_KEY`.
-4. Haz commit y push — el formulario empezará a enviar emails a tu correo.
+El endpoint ya está configurado en `src/components/sections/ComingSoon.tsx`
+(constante `FORMSPREE_ENDPOINT`). Si necesitas rotarlo, solo cambia esa línea.
 
 ## Modo oscuro
 
