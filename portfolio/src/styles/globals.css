@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   Variables de tema — modo claro (por defecto)
+   ============================================ */
+:root {
+  --color-bg: #fafafa;
+  --color-bg-soft: #f1f1f5;
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-border: #e4e4e7;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+}
+
+/* ============================================
+   Variables de tema — modo oscuro
+   ============================================ */
+.dark {
+  --color-bg: #09090b;
+  --color-bg-soft: #18181b;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-border: #27272a;
+  --color-accent: #60a5fa;
+  --color-accent-hover: #93c5fd;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+}
+
+/* Animación sutil de gradiente para el fondo del hero */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg) 0%,
+    var(--color-bg-soft) 50%,
+    var(--color-bg) 100%
+  );
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
+}
