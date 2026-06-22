@@ -158,7 +158,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               {project.tags.length > 0 && (
                 <div className="mb-6 flex flex-wrap justify-center gap-2">
                   {project.tags.map((tag) => (
-                    <Pill key={tag}>{tag}</Pill>
+                    <Pill key={tag} className="">
+                      {tag}
+                    </Pill>
                   ))}
                 </div>
               )}

@@ -14,7 +14,7 @@ interface PillProps {
 export function Pill({ children, className = "" }: PillProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-primary-container/15 px-3 py-1 font-mono text-xs font-medium uppercase tracking-widest text-primary ${className}`}
+      className={`inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.24em] text-primary shadow-sm shadow-primary/10 transition-all ${className}`}
     >
       {children}
     </span>

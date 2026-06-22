@@ -1,7 +1,6 @@
 import { ExternalLink, Github, ImageOff } from "lucide-react";
 import type { Project } from "../../data/projects";
 import { GlassCard } from "./GlassCard";
-import { Pill } from "./Pill";
 import { ProjectMoreInfoButton } from "./ProjectModal";
 
 interface ProjectCardProps {
@@ -14,18 +13,15 @@ interface ProjectCardProps {
  * Card individual de proyecto.
  *
  * - Imagen 48h con hover scale 1.1 (o placeholder si no hay).
- * - Pills de stack (truncadas a las primeras 3 si hay más).
  * - Título + descripción (line-clamp-3).
  * - Botón "Ver más información" (si se pasa `onOpen`).
  * - Iconos repo/demo y año.
  *
  * Toda la card es interactive (hover lift + glow) si tiene al menos un
- * enlace (repo o demo).
+ * enlace (repo o demo). Los tags se muestran en el modal.
  */
 export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const hasLink = Boolean(project.repoUrl || project.demoUrl);
-  const displayTags = project.tags.slice(0, 3);
-  const extraTags = project.tags.length - displayTags.length;
 
   return (
     <GlassCard
@@ -52,16 +48,6 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
       {/* Contenido */}
       <div className="flex flex-1 flex-col p-6">
-        {/* Tags */}
-        {displayTags.length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-2">
-            {displayTags.map((tag) => (
-              <Pill key={tag}>{tag}</Pill>
-            ))}
-            {extraTags > 0 && <Pill>+{extraTags}</Pill>}
-          </div>
-        )}
-
         {/* Título */}
         <h3 className="font-sans text-xl font-semibold tracking-tight text-on-surface">
           {project.title}
