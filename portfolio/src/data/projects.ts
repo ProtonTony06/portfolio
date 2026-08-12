@@ -15,6 +15,8 @@ export type Project = {
   features?: string[];
   /** Capturas opcionales mostradas en grid dentro del modal. */
   gallery?: string[];
+  /** Nota/alerta opcional mostrada en el modal como callout (ej: "Proyecto del instituto, no terminado"). */
+  note?: string;
 };
 
 export const projects: Project[] = [
@@ -33,14 +35,48 @@ export const projects: Project[] = [
       "Autenticación y RLS gestionados directamente en Supabase",
     ],
     tags: ["React", "TypeScript", "FastAPI", "Supabase", "PostgreSQL"],
-    imageUrl: "/projects/avatar.png",
+    imageUrl: "/projects/goalapp-cover.svg",
     gallery: [
-      "/projects/goalapp-1.png",
-      "/projects/goalapp-2.png",
-      "/projects/goalapp-3.png",
+      "/projects/goalapp-cover.svg",
+      "/projects/goalapp-landing.svg",
+      "/projects/goalapp-dashboard.svg",
+      "/projects/goalapp-live.svg",
+      "/projects/goalapp-calendar.svg",
     ],
-    repoUrl: "https://github.com/ProtonTony06/goalapp",
-    demoUrl: "https://goalapp-frontend.onrender.com",
+    repoUrl: "https://github.com/1DAM-antoniocue491/GoalApp",
+    demoUrl: "https://goalapp-frontend-web.onrender.com",
     year: 2026,
+    note: "Este es un proyecto del instituto, no terminado y con datos ficticios. La demo web está desplegada en Render y puede tardar unos segundos en arrancar.",
+  },
+  {
+    title: "PasswordManager",
+    description:
+      "Gestor de contraseñas privado para Android: cifrado híbrido (Android Keystore + password derivado), biometría y base de datos cifrada con SQLCipher. Todo local, sin servidores externos.",
+    longDescription:
+      "App Android nativa para gestionar credenciales de forma privada, sin depender de servicios en la nube. El modelo de seguridad se apoya en tres capas: Android Keystore para material criptográfico, una derivación de clave desde la master password del usuario, y SQLCipher para cifrar la base de datos en reposo. La autenticación se realiza con la master password y, opcionalmente, biometría.\n\nEl proyecto sigue MVVM + Clean Architecture, con una capa de dominio que expone los casos de uso (generar, buscar, filtrar por categoría, marcar favorito, auditar contraseñas débiles, obtener estadísticas de seguridad, exportar backup cifrado e importar CSV) y una capa de presentación en Jetpack Compose con ViewModels y StateFlow. La inyección de dependencias se gestiona con Hilt y se complementa con un widget de generador de contraseñas y auto-lock por inactividad.",
+    features: [
+      "Cifrado híbrido: Android Keystore (RSA/AES wrap) + derivación de clave desde master password",
+      "Autenticación biométrica (huella/rostro) opcional sobre la master password",
+      "Base de datos cifrada con SQLCipher, todo el contenido descifra en memoria",
+      "Generador de contraseñas con parámetros configurables y widget de acceso directo",
+      "Auditoría de contraseñas débiles con métricas de seguridad y estadísticas agregadas",
+      "Categorías, búsqueda, favoritos y filtrado en la lista de credenciales",
+      "Backup cifrado exportable e importador desde CSV",
+      "Auto-lock por inactividad y onboarding de configuración inicial",
+      "Cobertura de tests: cifrado, Keystore, DAOs, ViewModels e integración de cifrado híbrido",
+    ],
+    tags: ["Kotlin", "Jetpack Compose", "Android", "SQLCipher", "MVVM"],
+    imageUrl: "/projects/passwordmanager-cover.svg",
+    gallery: [
+      "/projects/passwordmanager-cover.svg",
+      "/projects/passwordmanager-login.svg",
+      "/projects/passwordmanager-home.svg",
+      "/projects/passwordmanager-list.svg",
+      "/projects/passwordmanager-generator.svg",
+    ],
+    repoUrl: "https://github.com/1DAM-antoniocue491/PasswordManager",
+    demoUrl: "/projects/password_manager.apk",
+    year: 2026,
+    note: "Proyecto del instituto, no totalmente terminado (MVP). App Android con captura de pantalla deshabilitada por seguridad. Las imágenes son mockups representativos.",
   },
 ];

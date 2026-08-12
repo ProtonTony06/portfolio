@@ -67,8 +67,7 @@ export function About() {
               ) : (
                 <a
                   href={cvHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download="CV-Antonio-Cuevas-Lopez.pdf"
                   className="group inline-flex items-center gap-2 font-medium text-primary transition-colors hover:text-secondary"
                 >
                   Descargar CV

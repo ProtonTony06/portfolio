@@ -115,23 +115,33 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg border border-outline-variant/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         style={{ scrollbarWidth: "none" }}
       >
-        {images.map((src, i) => (
-          <div
-            key={i}
-            className="relative w-full shrink-0 snap-center"
-            aria-roledescription="slide"
-            aria-label={`${i + 1} de ${count}`}
-          >
-            <img
-              src={src}
-              alt={`${alt} (${i + 1}/${count})`}
-              loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
-              draggable={false}
-              className="block h-auto max-h-72 w-full object-cover sm:max-h-80"
-            />
-          </div>
-        ))}
+        {images.map((src, i) => {
+          // Los SVG (mockups de móvil, diagramas) se renderizan con
+          // object-contain y fondo neutro para no distorsionarlos. Las
+          // fotos/destinos de pantalla completa mantienen object-cover.
+          const isSvg = src.toLowerCase().endsWith(".svg");
+          return (
+            <div
+              key={i}
+              className="relative w-full shrink-0 snap-center"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} de ${count}`}
+            >
+              <img
+                src={src}
+                alt={`${alt} (${i + 1}/${count})`}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                draggable={false}
+                className={
+                  isSvg
+                    ? "mx-auto block h-auto max-h-[28rem] w-auto max-w-full bg-surface-container-low object-contain p-2 sm:max-h-[32rem]"
+                    : "block h-auto max-h-72 w-full object-cover sm:max-h-80"
+                }
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Flechas. La izquierda se oculta en la primera imagen, la derecha

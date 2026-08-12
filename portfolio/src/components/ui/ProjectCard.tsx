@@ -1,4 +1,4 @@
-import { ExternalLink, Github, ImageOff } from "lucide-react";
+import { Download, ExternalLink, Github, ImageOff } from "lucide-react";
 import type { Project } from "../../data/projects";
 import { GlassCard } from "./GlassCard";
 import { ProjectMoreInfoButton } from "./ProjectModal";
@@ -37,7 +37,11 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
             alt={project.title}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className={
+              project.imageUrl.toLowerCase().endsWith(".svg")
+                ? "h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+                : "h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            }
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-on-surface-variant">
@@ -75,17 +79,26 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
                 <Github size={18} strokeWidth={1.75} aria-hidden="true" />
               </a>
             )}
-            {project.demoUrl && (
-              <a
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Ver demo de ${project.title}`}
-                className="text-on-surface-variant transition-colors hover:text-primary"
-              >
-                <ExternalLink size={18} strokeWidth={1.75} aria-hidden="true" />
-              </a>
-            )}
+            {project.demoUrl && (() => {
+              const isDownload = /\.(apk|zip|tar|gz|rar|exe|dmg)$/i.test(project.demoUrl);
+              const label = isDownload ? `Descargar APK de ${project.title}` : `Ver demo de ${project.title}`;
+              return (
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download={isDownload ? "" : undefined}
+                  aria-label={label}
+                  className="text-on-surface-variant transition-colors hover:text-primary"
+                >
+                  {isDownload ? (
+                    <Download size={18} strokeWidth={1.75} aria-hidden="true" />
+                  ) : (
+                    <ExternalLink size={18} strokeWidth={1.75} aria-hidden="true" />
+                  )}
+                </a>
+              );
+            })()}
           </div>
           <span className="font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
             {project.year}

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ExternalLink, Github, Info, X } from "lucide-react";
+import { AlertTriangle, Download, ExternalLink, Github, Info, X } from "lucide-react";
 import type { Project } from "../../data/projects";
 import { Carousel } from "./Carousel";
 import { Pill } from "./Pill";
@@ -143,15 +143,42 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
             {/* Content scrollable */}
             <div className="flex-1 overflow-y-auto px-6 py-6">
-              {/* Galería opcional (carrusel) */}
-              {project.gallery && project.gallery.length > 0 && (
-                <>
-                  <Carousel
-                    images={project.gallery}
-                    alt={project.title}
-                    className="mb-10"
+              {/* Imagen de portada: galería si hay, imageUrl como fallback.
+                  Como siempre hay al menos una, evitamos el placeholder vacío. */}
+              {((project.gallery && project.gallery.length > 0) ||
+                project.imageUrl) && (
+                <div className="mb-10">
+                  {project.gallery && project.gallery.length > 0 ? (
+                    <Carousel
+                      images={project.gallery}
+                      alt={project.title}
+                    />
+                  ) : (
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      loading="lazy"
+                      decoding="async"
+                      className={
+                        project.imageUrl?.toLowerCase().endsWith(".svg")
+                          ? "mx-auto block h-auto max-h-[28rem] w-auto max-w-full rounded-lg border border-outline-variant/40 bg-surface-container-low object-contain p-2 sm:max-h-[32rem]"
+                          : "block h-auto max-h-72 w-full rounded-lg border border-outline-variant/40 object-cover sm:max-h-80"
+                      }
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Nota/alerta opcional (callout con borde izquierdo) */}
+              {project.note && (
+                <div className="mb-6 flex items-start gap-3 rounded-r-lg border-l-4 border-tertiary bg-tertiary-container/40 px-4 py-3 text-sm text-on-surface">
+                  <AlertTriangle
+                    size={18}
+                    className="mt-0.5 shrink-0 text-tertiary"
+                    aria-hidden="true"
                   />
-                </>
+                  <p>{project.note}</p>
+                </div>
               )}
 
               {/* Tags */}
@@ -220,17 +247,28 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   Código
                 </a>
               )}
-              {project.demoUrl && (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-primary transition-all hover:-translate-y-0.5 hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-                >
-                  <ExternalLink size={16} aria-hidden="true" />
-                  Demo
-                </a>
-              )}
+              {project.demoUrl && (() => {
+                // Detecta si el enlace apunta a un archivo descargable (APK, ZIP, etc.)
+                // para cambiar el icono y el texto del botón.
+                const isDownload = /\.(apk|zip|tar|gz|rar|exe|dmg)$/i.test(project.demoUrl);
+                const label = isDownload ? "Descargar APK" : "Demo";
+                return (
+                  <a
+                    href={project.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download={isDownload ? "" : undefined}
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-primary transition-all hover:-translate-y-0.5 hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                  >
+                    {isDownload ? (
+                      <Download size={16} aria-hidden="true" />
+                    ) : (
+                      <ExternalLink size={16} aria-hidden="true" />
+                    )}
+                    {label}
+                  </a>
+                );
+              })()}
             </footer>
             </motion.div>
           </div>
