@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="FormProject - Formulario público">
+  <title>FormProject - Formulario público</title>
+  <desc>Mockup del formulario público /f/[slug] con estética slate y validaciones visibles.</desc>
+
+  <defs>
+    <linearGradient id="bgFPPublic" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#E2E8F0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bgFPPublic)"/>
+
+  <!-- Browser chrome -->
+  <g>
+    <rect x="20" y="20" width="1160" height="60" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="55" cy="50" r="7" fill="#EF4444"/>
+    <circle cx="80" cy="50" r="7" fill="#FBBF24"/>
+    <circle cx="105" cy="50" r="7" fill="#22C55E"/>
+    <rect x="160" y="35" width="700" height="30" rx="15" fill="#F1F5F9"/>
+    <text x="180" y="55" fill="#64748B" font-family="monospace,monospace" font-size="12">form.antoniocuevas.dev/f/encuesta-demo</text>
+  </g>
+
+  <g transform="translate(20 80)">
+    <!-- Public page body -->
+    <rect x="0" y="0" width="1160" height="650" fill="url(#bgFPPublic)"/>
+
+    <!-- Centered card -->
+    <g transform="translate(280 60)">
+      <rect x="0" y="0" width="600" height="540" rx="16" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+
+      <!-- Header -->
+      <g transform="translate(40 40)">
+        <g transform="translate(0 0)">
+          <rect x="0" y="0" width="36" height="36" rx="8" fill="#0F172A"/>
+          <path d="M10 14 L26 14 L22 10 L14 10 Z M10 20 L26 20 M10 26 L22 26" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <text x="48" y="16" fill="#0F172A" font-family="Roboto, sans-serif" font-size="20" font-weight="700">Encuesta de satisfacción</text>
+        <text x="48" y="36" fill="#64748B" font-family="Roboto, sans-serif" font-size="12">Tu opinión nos ayuda a mejorar el servicio.</text>
+      </g>
+
+      <line x1="40" y1="100" x2="560" y2="100" stroke="#E2E8F0"/>
+
+      <!-- Question 1: option multiple -->
+      <g transform="translate(40 130)">
+        <text x="0" y="0" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13" font-weight="600">¿Cómo valorarías el servicio?</text>
+        <text x="220" y="0" fill="#EF4444" font-family="Roboto, sans-serif" font-size="13" font-weight="600">*</text>
+
+        <g transform="translate(0 24)">
+          <circle cx="10" cy="10" r="9" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="32" y="14" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Excelente</text>
+        </g>
+        <g transform="translate(0 54)">
+          <circle cx="10" cy="10" r="6" fill="#10B981"/>
+          <circle cx="10" cy="10" r="9" fill="none" stroke="#10B981" stroke-width="2"/>
+          <text x="32" y="14" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Bueno</text>
+        </g>
+        <g transform="translate(0 84)">
+          <circle cx="10" cy="10" r="9" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="32" y="14" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Regular</text>
+        </g>
+        <g transform="translate(0 114)">
+          <circle cx="10" cy="10" r="9" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="32" y="14" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Malo</text>
+        </g>
+      </g>
+
+      <!-- Question 2: text libre -->
+      <g transform="translate(40 280)">
+        <text x="0" y="0" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13" font-weight="600">¿Qué echas en falta?</text>
+        <rect x="0" y="14" width="520" height="80" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+        <text x="14" y="38" fill="#0F172A" font-family="Roboto, sans-serif" font-size="12">Me gustaría tener un modo offline para...</text>
+        <text x="14" y="78" fill="#94A3B8" font-family="Roboto, sans-serif" font-size="10">37 / 280 caracteres</text>
+      </g>
+
+      <!-- Question 3: option multiple -->
+      <g transform="translate(40 400)">
+        <text x="0" y="0" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13" font-weight="600">¿Recomendarías el servicio?</text>
+        <text x="220" y="0" fill="#EF4444" font-family="Roboto, sans-serif" font-size="13" font-weight="600">*</text>
+
+        <g transform="translate(0 24)">
+          <rect x="0" y="0" width="14" height="14" rx="3" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="26" y="12" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Sí, sin dudarlo</text>
+        </g>
+        <g transform="translate(180 24)">
+          <rect x="0" y="0" width="14" height="14" rx="3" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="26" y="12" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">Quizás</text>
+        </g>
+        <g transform="translate(310 24)">
+          <rect x="0" y="0" width="14" height="14" rx="3" fill="none" stroke="#94A3B8" stroke-width="1.5"/>
+          <text x="26" y="12" fill="#0F172A" font-family="Roboto, sans-serif" font-size="13">No</text>
+        </g>
+      </g>
+
+      <!-- Submit -->
+      <g transform="translate(40 480)">
+        <rect x="0" y="0" width="160" height="40" rx="8" fill="#0F172A"/>
+        <text x="80" y="26" text-anchor="middle" fill="#FFFFFF" font-family="Roboto, sans-serif" font-size="13" font-weight="600">Enviar respuesta</text>
+      </g>
+      <text x="220" y="506" fill="#94A3B8" font-family="Roboto, sans-serif" font-size="11">* Campos requeridos</text>
+    </g>
+
+    <!-- Side meta -->
+    <g transform="translate(900 80)">
+      <rect x="0" y="0" width="240" height="120" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <text x="20" y="32" fill="#94A3B8" font-family="monospace,monospace" font-size="10" letter-spacing="2">FORMULARIO PÚBLICO</text>
+      <text x="20" y="60" fill="#0F172A" font-family="Roboto, sans-serif" font-size="14" font-weight="700">Sin autenticación</text>
+      <text x="20" y="84" fill="#64748B" font-family="Roboto, sans-serif" font-size="11">Cualquier usuario con el enlace</text>
+      <text x="20" y="100" fill="#64748B" font-family="Roboto, sans-serif" font-size="11">puede responder.</text>
+    </g>
+  </g>
+
+  <text x="600" y="730" text-anchor="middle" fill="#94A3B8" font-family="monospace,monospace" font-size="10" letter-spacing="3">MOCKUP · FORMPROJECT PUBLIC FORM</text>
+</svg>
