@@ -22,18 +22,18 @@ export const skills: SkillCategory[] = [
     category: "Frontend",
     icon: Code2,
     // TODO: añade tus tecnologías frontend (ej: "React", "TypeScript", "Tailwind CSS")
-    items: ["React", "Kotlin", "TypeScript", "Tailwind CSS"],
+    items: ["React", "Kotlin", "TypeScript", "Tailwind CSS", "Next.js"],
   },
   {
     category: "Backend",
     icon: Database,
     // TODO: añade tus tecnologías backend (ej: "Node.js", "PostgreSQL", "Redis")
-    items: ["Node.js", "PostgreSQL", "MySQL", "Redis", "MongoDB", "Python", "Spring Boot"],
+    items: ["Node.js", "PostgreSQL", "MySQL", "Redis", "MongoDB", "Python", "Spring Boot", "Supabase"],
   },
   {
     category: "Herramientas",
     icon: Wrench,
     // TODO: añade tus herramientas (ej: "Git", "Docker", "Figma")
-    items: ["Git", "Docker", "Figma"],
+    items: ["Git", "Docker", "Figma", "Zod"],
   },
 ];

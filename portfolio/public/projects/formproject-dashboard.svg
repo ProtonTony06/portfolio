@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="FormProject - Dashboard admin">
+  <title>FormProject - Dashboard admin</title>
+  <desc>Mockup del dashboard admin con lista de formularios, badges de estado y botón de crear.</desc>
+
+  <defs>
+    <linearGradient id="bgFPDash" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#F1F5F9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bgFPDash)"/>
+
+  <!-- Browser chrome -->
+  <g>
+    <rect x="20" y="20" width="1160" height="60" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <circle cx="55" cy="50" r="7" fill="#EF4444"/>
+    <circle cx="80" cy="50" r="7" fill="#FBBF24"/>
+    <circle cx="105" cy="50" r="7" fill="#22C55E"/>
+    <rect x="160" y="35" width="700" height="30" rx="15" fill="#F1F5F9"/>
+    <text x="180" y="55" fill="#64748B" font-family="monospace,monospace" font-size="12">form.antoniocuevas.dev/admin</text>
+  </g>
+
+  <g transform="translate(20 80)">
+    <!-- Nav top -->
+    <rect x="0" y="0" width="1160" height="60" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+    <g transform="translate(30 18)">
+      <rect x="0" y="0" width="22" height="22" rx="5" fill="#0F172A"/>
+      <path d="M6 8 L11 13 L16 8 M6 14 L11 19 L16 14" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="62" y="36" fill="#0F172A" font-family="Roboto, sans-serif" font-size="16" font-weight="700">FormProject</text>
+    <g transform="translate(880 18)" fill="#475569">
+      <text x="0" y="18" font-family="Roboto, sans-serif" font-size="13">Formularios</text>
+      <text x="110" y="18" font-family="Roboto, sans-serif" font-size="13">Respuestas</text>
+      <text x="210" y="18" font-family="Roboto, sans-serif" font-size="13">Ajustes</text>
+    </g>
+    <circle cx="1110" cy="30" r="16" fill="#0F172A"/>
+    <text x="1110" y="35" text-anchor="middle" fill="#FFFFFF" font-family="Roboto, sans-serif" font-size="13" font-weight="700">AC</text>
+
+    <!-- Body -->
+    <rect x="0" y="60" width="1160" height="610" fill="url(#bgFPDash)"/>
+
+    <!-- Header section -->
+    <text x="40" y="110" fill="#0F172A" font-family="Roboto, sans-serif" font-size="28" font-weight="700">Mis formularios</text>
+    <text x="40" y="134" fill="#64748B" font-family="Roboto, sans-serif" font-size="13">3 formularios · 47 respuestas en total</text>
+
+    <!-- New form button -->
+    <g transform="translate(950 100)">
+      <rect x="0" y="0" width="170" height="40" rx="8" fill="#0F172A"/>
+      <text x="20" y="26" fill="#FFFFFF" font-family="Roboto, sans-serif" font-size="13" font-weight="600">+ Nuevo formulario</text>
+    </g>
+
+    <!-- Form cards -->
+    <g transform="translate(40 170)">
+      <!-- Card 1: Active -->
+      <rect x="0" y="0" width="1120" height="120" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <g transform="translate(24 24)">
+        <rect x="0" y="0" width="44" height="44" rx="8" fill="#F1F5F9"/>
+        <path d="M14 16 L30 16 L26 12 L18 12 Z M14 22 L30 22 M14 28 L26 28" stroke="#0F172A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="84" y="48" fill="#0F172A" font-family="Roboto, sans-serif" font-size="16" font-weight="600">Encuesta de satisfacción</text>
+      <text x="84" y="70" fill="#64748B" font-family="Roboto, sans-serif" font-size="12">Recoge feedback sobre el servicio · 3 preguntas</text>
+      <g transform="translate(84 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">SLUG</text>
+        <text x="0" y="16" fill="#475569" font-family="monospace,monospace" font-size="11">/f/encuesta-demo</text>
+      </g>
+      <g transform="translate(280 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">RESPUESTAS</text>
+        <text x="0" y="16" fill="#475569" font-family="Roboto, sans-serif" font-size="13" font-weight="700">28</text>
+      </g>
+      <!-- Active badge -->
+      <g transform="translate(820 30)">
+        <rect x="0" y="0" width="76" height="26" rx="13" fill="#D1FAE5"/>
+        <circle cx="14" cy="13" r="4" fill="#10B981"/>
+        <text x="46" y="17" text-anchor="middle" fill="#065F46" font-family="Roboto, sans-serif" font-size="11" font-weight="600">Activo</text>
+      </g>
+      <!-- Actions -->
+      <g transform="translate(820 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Editar</text>
+      </g>
+      <g transform="translate(916 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Respuestas</text>
+      </g>
+      <g transform="translate(1012 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#FECACA"/>
+        <text x="43" y="20" text-anchor="middle" fill="#B91C1C" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Eliminar</text>
+      </g>
+    </g>
+
+    <!-- Card 2: Active -->
+    <g transform="translate(40 310)">
+      <rect x="0" y="0" width="1120" height="120" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <g transform="translate(24 24)">
+        <rect x="0" y="0" width="44" height="44" rx="8" fill="#F1F5F9"/>
+        <path d="M14 16 L30 16 L26 12 L18 12 Z M14 22 L30 22 M14 28 L26 28" stroke="#0F172A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="84" y="48" fill="#0F172A" font-family="Roboto, sans-serif" font-size="16" font-weight="600">Registro de eventos</text>
+      <text x="84" y="70" fill="#64748B" font-family="Roboto, sans-serif" font-size="12">Inscripción para el workshop de septiembre · 5 preguntas</text>
+      <g transform="translate(84 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">SLUG</text>
+        <text x="0" y="16" fill="#475569" font-family="monospace,monospace" font-size="11">/f/registro-eventos</text>
+      </g>
+      <g transform="translate(280 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">RESPUESTAS</text>
+        <text x="0" y="16" fill="#475569" font-family="Roboto, sans-serif" font-size="13" font-weight="700">15</text>
+      </g>
+      <g transform="translate(820 30)">
+        <rect x="0" y="0" width="76" height="26" rx="13" fill="#D1FAE5"/>
+        <circle cx="14" cy="13" r="4" fill="#10B981"/>
+        <text x="46" y="17" text-anchor="middle" fill="#065F46" font-family="Roboto, sans-serif" font-size="11" font-weight="600">Activo</text>
+      </g>
+      <g transform="translate(820 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Editar</text>
+      </g>
+      <g transform="translate(916 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Respuestas</text>
+      </g>
+      <g transform="translate(1012 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#FECACA"/>
+        <text x="43" y="20" text-anchor="middle" fill="#B91C1C" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Eliminar</text>
+      </g>
+    </g>
+
+    <!-- Card 3: Inactive -->
+    <g transform="translate(40 450)">
+      <rect x="0" y="0" width="1120" height="120" rx="10" fill="#FFFFFF" stroke="#E2E8F0"/>
+      <g transform="translate(24 24)">
+        <rect x="0" y="0" width="44" height="44" rx="8" fill="#F1F5F9"/>
+        <path d="M14 16 L30 16 L26 12 L18 12 Z M14 22 L30 22 M14 28 L26 28" stroke="#0F172A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="84" y="48" fill="#0F172A" font-family="Roboto, sans-serif" font-size="16" font-weight="600">Solicitud de soporte técnico</text>
+      <text x="84" y="70" fill="#64748B" font-family="Roboto, sans-serif" font-size="12">Recoge incidencias de usuarios · 4 preguntas</text>
+      <g transform="translate(84 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">SLUG</text>
+        <text x="0" y="16" fill="#475569" font-family="monospace,monospace" font-size="11">/f/soporte</text>
+      </g>
+      <g transform="translate(280 84)">
+        <text x="0" y="0" fill="#94A3B8" font-family="monospace,monospace" font-size="10">RESPUESTAS</text>
+        <text x="0" y="16" fill="#475569" font-family="Roboto, sans-serif" font-size="13" font-weight="700">4</text>
+      </g>
+      <g transform="translate(820 30)">
+        <rect x="0" y="0" width="86" height="26" rx="13" fill="#F1F5F9"/>
+        <circle cx="14" cy="13" r="4" fill="#94A3B8"/>
+        <text x="51" y="17" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="600">Inactivo</text>
+      </g>
+      <g transform="translate(820 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Editar</text>
+      </g>
+      <g transform="translate(916 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#CBD5E1"/>
+        <text x="43" y="20" text-anchor="middle" fill="#475569" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Respuestas</text>
+      </g>
+      <g transform="translate(1012 70)">
+        <rect x="0" y="0" width="86" height="32" rx="6" fill="none" stroke="#FECACA"/>
+        <text x="43" y="20" text-anchor="middle" fill="#B91C1C" font-family="Roboto, sans-serif" font-size="11" font-weight="500">Eliminar</text>
+      </g>
+    </g>
+  </g>
+
+  <text x="600" y="730" text-anchor="middle" fill="#94A3B8" font-family="monospace,monospace" font-size="10" letter-spacing="3">MOCKUP · FORMPROJECT DASHBOARD</text>
+</svg>

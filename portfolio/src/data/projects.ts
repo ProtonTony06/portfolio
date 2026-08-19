@@ -79,4 +79,32 @@ export const projects: Project[] = [
     year: 2026,
     note: "Proyecto del instituto, no totalmente terminado (MVP). App Android con captura de pantalla deshabilitada por seguridad. Las imágenes son mockups representativos.",
   },
+  {
+    title: "FormProject",
+    description:
+      "Plataforma de formularios personalizables: crea, comparte y recoge respuestas. Next.js 14 (App Router) + Supabase + NextAuth + Tailwind + Zod.",
+    longDescription:
+      "Plataforma propia para crear, compartir y recoger respuestas a formularios dinámicos sin tocar código. Cada formulario expone una URL pública (/f/[slug]) compartible sin autenticación, y un panel privado (/admin) protegido para gestionar el ciclo de vida del formulario.\n\nEl frontend está en Next.js 14 con App Router, server components y server actions; la autenticación usa NextAuth v5 con credenciales y bcrypt contra una tabla `admin_user` en Supabase. La base de datos (formularios, preguntas, respuestas) vive en Supabase Postgres con `service_role` server-only y el cliente público usa `anon` con políticas RLS. La validación usa Zod en cliente y servidor (defensa en profundidad) y los formularios se renderizan con react-hook-form.\n\nDesplegado en producción desde agosto de 2026 en dominio propio, con HTTPS, rate-limit por IP y por email en el login, y migración futura de autenticación a Supabase Auth una vez consolidado.",
+    features: [
+      "Builder de formularios con preguntas de opción múltiple y texto libre, validación configurable y orden editable",
+      "Cada formulario expone una URL pública /f/[slug] compartible sin autenticación",
+      "Panel admin protegido con NextAuth v5, bcrypt y rate-limit por IP y por email",
+      "Persistencia en Supabase Postgres con RLS: anon solo lee formularios activos",
+      "Validación cliente con react-hook-form + Zod, replicada en servidor (defensa en profundidad)",
+      "Listado y detalle de respuestas por formulario con exportación CSV",
+      "Auto-lock y throttling en login con tabla de intentos en memoria",
+      "Desplegado en producción con dominio propio y HTTPS",
+    ],
+    tags: ["Next.js", "Supabase", "NextAuth", "Tailwind CSS", "Zod", "TypeScript"],
+    imageUrl: "/projects/formproject-cover.svg",
+    gallery: [
+      "/projects/formproject-cover.svg",
+      "/projects/formproject-login.svg",
+      "/projects/formproject-dashboard.svg",
+      "/projects/formproject-builder.svg",
+      "/projects/formproject-publicform.svg",
+    ],
+    repoUrl: "https://github.com/ProtonTony06/form-project",
+    year: 2026,
+  },
 ];
