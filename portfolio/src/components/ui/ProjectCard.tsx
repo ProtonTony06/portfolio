@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Download, ExternalLink, Github, ImageOff } from "lucide-react";
 import type { Project } from "../../data/projects";
 import { GlassCard } from "./GlassCard";
@@ -10,15 +11,16 @@ interface ProjectCardProps {
 }
 
 /**
- * Card individual de proyecto.
+ * Card individual de proyecto (mockup .cardA: file card).
  *
- * - Imagen 48h con hover scale 1.1 (o placeholder si no hay).
- * - Título + descripción (line-clamp-3).
+ * - Imagen 48h con hover scale (o placeholder si no hay).
+ * - Título estilo carpeta `minusculas/` en ámbar + descripción dim.
+ * - Tags en verde como texto plano separado por ` · `.
  * - Botón "Ver más información" (si se pasa `onOpen`).
  * - Iconos repo/demo y año.
  *
- * Toda la card es interactive (hover lift + glow) si tiene al menos un
- * enlace (repo o demo). Los tags se muestran en el modal.
+ * Toda la card es interactive (hover lift + borde primary) si tiene al menos
+ * un enlace (repo o demo).
  */
 export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const hasLink = Boolean(project.repoUrl || project.demoUrl);
@@ -52,15 +54,32 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
       {/* Contenido */}
       <div className="flex flex-1 flex-col p-6">
-        {/* Título */}
-        <h3 className="font-sans text-xl font-semibold tracking-tight text-on-surface">
-          {project.title}
+        {/* Título estilo carpeta (nombre en ámbar, "/" en dim) */}
+        <h3 className="font-mono text-base font-semibold text-secondary">
+          {project.title.toLowerCase().replace(/\s+/g, "")}
+          <span className="text-on-surface-variant">/</span>
         </h3>
 
         {/* Descripción */}
-        <p className="mt-2 line-clamp-3 text-sm text-on-surface-variant">
+        <p className="mt-2 line-clamp-3 text-[13px] text-on-surface-variant">
           {project.description}
         </p>
+
+        {/* Tags en texto plano, separados por " · " */}
+        {project.tags.length > 0 && (
+          <p className="mt-3 flex flex-wrap gap-x-1.5 gap-y-0.5 text-xs text-primary">
+            {project.tags.map((tag, i) => (
+              <Fragment key={tag}>
+                {i > 0 && (
+                  <span aria-hidden="true" className="text-on-surface-variant">
+                    ·
+                  </span>
+                )}
+                {tag}
+              </Fragment>
+            ))}
+          </p>
+        )}
 
         {/* Botón "Ver más información" (modal) */}
         {onOpen && <ProjectMoreInfoButton onClick={onOpen} />}

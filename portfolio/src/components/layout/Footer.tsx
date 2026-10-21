@@ -1,32 +1,32 @@
 import { SocialLinks } from "../ui/SocialLinks";
-import { profile } from "../../data/profile";
 
 /**
- * Footer minimal con logo, copyright dinámico y enlaces sociales.
+ * Footer como línea de estado de terminal.
  *
- * Si no hay redes sociales configuradas, el bloque de iconos no se muestra
- * (silencio elegante hasta que rellenes data/profile.ts).
+ * Una única fila mono dim: `estado: online · {año} · antonio@portfolio`
+ * (+ enlaces sociales a la derecha). En móvil se apila.
  */
 export function Footer() {
   const year = new Date().getFullYear();
-  const displayName = profile.name || "Portfolio";
 
   return (
-    <footer className="border-t border-outline-variant/30 bg-surface-container-lowest">
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-6 px-6 py-8 md:flex-row">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-sm font-semibold uppercase tracking-widest text-on-surface">
-            {displayName}
+    <footer className="border-t border-outline-variant bg-surface-container-lowest">
+      <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-6 py-6 font-mono text-xs text-on-surface-variant md:flex-row">
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span>
+            <span aria-hidden="true">estado: </span>
+            <span className="text-primary">online</span>
           </span>
-          <span className="hidden text-on-surface-variant md:inline">·</span>
-          <span className="hidden text-sm text-on-surface-variant md:inline">
-            © {year}
+          <span aria-hidden="true" className="text-on-surface-variant">
+            ·
           </span>
-        </div>
-        <SocialLinks variant="inline" iconSize={18} />
-        <span className="text-sm text-on-surface-variant md:hidden">
-          © {year}
-        </span>
+          <span>© {year}</span>
+          <span aria-hidden="true" className="text-on-surface-variant">
+            ·
+          </span>
+          <span className="text-on-surface">antonio@portfolio</span>
+        </p>
+        <SocialLinks variant="inline" iconSize={16} />
       </div>
     </footer>
   );

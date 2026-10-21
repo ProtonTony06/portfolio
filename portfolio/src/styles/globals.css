@@ -1,124 +1,70 @@
-@import "@fontsource-variable/geist";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
-@import "@fontsource/jetbrains-mono/600.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================
-   Sistema MD3 — Emerald Cyber-Minimalism
-   Tokens definidos en memory/DESIGN.md.
-   Prefijo --md-sys-color-* para evitar colisiones.
+   Sistema de tokens — "Terminal" (Concepto A)
+   Fuente: design-mockups/conceptos.html (.tA).
+   Nombres --md-sys-color-* intactos: solo cambian
+   los valores. Tema único: no hay bloque .dark.
    ============================================ */
 
-/* ---------- LIGHT (default) ---------- */
+/* ---------- Tema terminal (único) ---------- */
 :root {
-  /* Superficies (jerarquía invertida respecto al dark del DESIGN) */
-  --md-sys-color-background: #f6f8fb;
-  --md-sys-color-surface: #ffffff;
-  --md-sys-color-surface-dim: #e8edf4;
-  --md-sys-color-surface-bright: #ffffff;
-  --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #f1f4f9;
-  --md-sys-color-surface-container: #ebeff5;
-  --md-sys-color-surface-container-high: #e4eaf1;
-  --md-sys-color-surface-container-highest: #dde4ec;
-  --md-sys-color-surface-variant: #dde4ec;
+  /* Superficies */
+  --md-sys-color-background: #0a0f0d;
+  --md-sys-color-surface: #0a0f0d;
+  --md-sys-color-surface-dim: #0a0f0d;
+  --md-sys-color-surface-bright: #16211a;
+  --md-sys-color-surface-container-lowest: #070c09;
+  --md-sys-color-surface-container-low: #0d1511;
+  --md-sys-color-surface-container: #101a14;
+  --md-sys-color-surface-container-high: #14211a;
+  --md-sys-color-surface-container-highest: #182619;
+  --md-sys-color-surface-variant: #14211a;
 
   /* Texto */
-  --md-sys-color-on-surface: #1a1d24;
-  --md-sys-color-on-surface-variant: #45474f;
-  --md-sys-color-inverse-surface: #2d3449;
-  --md-sys-color-inverse-on-surface: #f1f4f9;
+  --md-sys-color-on-surface: #cfe8d2;
+  --md-sys-color-on-surface-variant: #5f7a66;
+  --md-sys-color-inverse-surface: #cfe8d2;
+  --md-sys-color-inverse-on-surface: #0a0f0d;
 
   /* Outline */
-  --md-sys-color-outline: #76787f;
-  --md-sys-color-outline-variant: #c5c6cd;
+  --md-sys-color-outline: #1c2b21;
+  --md-sys-color-outline-variant: #1c2b21;
 
-  /* Primary (emerald) */
-  --md-sys-color-primary: #10b981;
-  --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #d1fae5;
-  --md-sys-color-on-primary-container: #003824;
-  --md-sys-color-inverse-primary: #4edea3;
-  --md-sys-color-surface-tint: #10b981;
+  /* Primary (verde terminal) */
+  --md-sys-color-primary: #52e08a;
+  --md-sys-color-on-primary: #04120a;
+  --md-sys-color-primary-container: #123524;
+  --md-sys-color-on-primary-container: #52e08a;
+  --md-sys-color-inverse-primary: #6fb3f8;
+  --md-sys-color-surface-tint: #52e08a;
 
-  /* Secondary (mint) */
-  --md-sys-color-secondary: #34d399;
-  --md-sys-color-on-secondary: #ffffff;
-  --md-sys-color-secondary-container: #d1fae5;
-  --md-sys-color-on-secondary-container: #003824;
+  /* Secondary (ámbar) */
+  --md-sys-color-secondary: #f5c542;
+  --md-sys-color-on-secondary: #04120a;
+  --md-sys-color-secondary-container: #332a10;
+  --md-sys-color-on-secondary-container: #f5c542;
 
-  /* Tertiary (amber desaturado) */
-  --md-sys-color-tertiary: #f59e0b;
-  --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #fef3c7;
-  --md-sys-color-on-tertiary-container: #78350f;
-
-  /* Error */
-  --md-sys-color-error: #dc2626;
-  --md-sys-color-on-error: #ffffff;
-  --md-sys-color-error-container: #fee2e2;
-  --md-sys-color-on-error-container: #7f1d1d;
-}
-
-/* ---------- DARK ---------- */
-.dark {
-  /* Superficies (valores exactos del DESIGN.md) */
-  --md-sys-color-background: #0b1326;
-  --md-sys-color-surface: #0b1326;
-  --md-sys-color-surface-dim: #0b1326;
-  --md-sys-color-surface-bright: #31394e;
-  --md-sys-color-surface-container-lowest: #060d20;
-  --md-sys-color-surface-container-low: #131b2e;
-  --md-sys-color-surface-container: #171f33;
-  --md-sys-color-surface-container-high: #222a3e;
-  --md-sys-color-surface-container-highest: #2d3449;
-  --md-sys-color-surface-variant: #2d3449;
-
-  /* Texto */
-  --md-sys-color-on-surface: #dbe2fd;
-  --md-sys-color-on-surface-variant: #bbcabf;
-  --md-sys-color-inverse-surface: #dbe2fd;
-  --md-sys-color-inverse-on-surface: #283044;
-
-  /* Outline */
-  --md-sys-color-outline: #86948a;
-  --md-sys-color-outline-variant: #3c4a42;
-
-  /* Primary (emerald) */
-  --md-sys-color-primary: #4edea3;
-  --md-sys-color-on-primary: #003824;
-  --md-sys-color-primary-container: #10b981;
-  --md-sys-color-on-primary-container: #00422b;
-  --md-sys-color-inverse-primary: #006c49;
-  --md-sys-color-surface-tint: #4edea3;
-
-  /* Secondary (mint) */
-  --md-sys-color-secondary: #45dfa4;
-  --md-sys-color-on-secondary: #003825;
-  --md-sys-color-secondary-container: #00bd85;
-  --md-sys-color-on-secondary-container: #00452e;
-
-  /* Tertiary (coral) */
-  --md-sys-color-tertiary: #ffb3af;
-  --md-sys-color-on-tertiary: #650911;
-  --md-sys-color-tertiary-container: #fc7c78;
-  --md-sys-color-on-tertiary-container: #711419;
+  /* Tertiary (azul) */
+  --md-sys-color-tertiary: #6fb3f8;
+  --md-sys-color-on-tertiary: #04120a;
+  --md-sys-color-tertiary-container: #16283a;
+  --md-sys-color-on-tertiary-container: #6fb3f8;
 
   /* Error */
-  --md-sys-color-error: #ffb4ab;
-  --md-sys-color-on-error: #690005;
-  --md-sys-color-error-container: #93000a;
-  --md-sys-color-on-error-container: #ffdad6;
+  --md-sys-color-error: #f07168;
+  --md-sys-color-on-error: #04120a;
+  --md-sys-color-error-container: #3a1412;
+  --md-sys-color-on-error-container: #ffb4ab;
 }
 
 /* ============================================
-   Aliases legacy — para no romper ThemeToggle
-   ni ComingSoon. Apuntan a tokens MD3.
-   Mantener hasta migrar esos componentes.
+   Aliases legacy — indirecciones var() a los
+   tokens superiores. Se remapean solos a la
+   paleta terminal. Decisión de borrado opcional
+   pendiente en corte 3 (T-20).
    ============================================ */
 :root {
   --color-bg: var(--md-sys-color-background);
@@ -141,14 +87,9 @@
     background-color: var(--md-sys-color-background);
     color: var(--md-sys-color-on-surface);
     font-family:
-      "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system,
-      sans-serif;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition:
-      background-color 300ms ease,
-      color 300ms ease;
   }
   *,
   *::before,
@@ -166,28 +107,6 @@
    Animaciones y utilidades
    ============================================ */
 
-/* Gradient animado para el Hero (reutilizado) */
-@keyframes gradient-shift {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.gradient-bg {
-  background: linear-gradient(
-    135deg,
-    var(--md-sys-color-background) 0%,
-    var(--md-sys-color-surface-container-low) 50%,
-    var(--md-sys-color-background) 100%
-  );
-  background-size: 200% 200%;
-  animation: gradient-shift 15s ease infinite;
-}
-
 /* Fade-in-up usado por IntersectionObserver (CSS-only fallback) */
 .fade-in-up {
   opacity: 0;
@@ -203,13 +122,20 @@
   transform: translateY(0);
 }
 
-/* Glow emerald reutilizable */
-.glow-primary {
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
+/* Cursor de terminal (mockup .tA-cursor) */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
-.dark .glow-primary {
-  box-shadow: 0 8px 32px rgba(78, 222, 163, 0.2);
+.terminal-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  background: var(--md-sys-color-primary);
+  vertical-align: -0.12em;
+  animation: blink 1.1s steps(1) infinite;
 }
 
 /* ============================================
@@ -231,7 +157,7 @@
     opacity: 1;
     transform: none;
   }
-  .gradient-bg {
+  .terminal-cursor {
     animation: none;
   }
 }

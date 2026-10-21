@@ -11,7 +11,7 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
  * Inspirado en el DESIGN.md: animaciones técnicas, no decorativas.
  */
 
-const EASE_OUT = [0.16, 1, 0.3, 1] as const; // curva exponencial suave
+export const EASE_OUT = [0.16, 1, 0.3, 1] as const; // curva exponencial suave
 
 export function useFadeUp(): Variants {
   const reduce = usePrefersReducedMotion();

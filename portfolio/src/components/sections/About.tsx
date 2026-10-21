@@ -110,7 +110,7 @@ export function About() {
                   <GlassCard padding="md" className="flex h-full flex-col items-center justify-center gap-3 text-center">
                     <span
                       aria-hidden="true"
-                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-container/20 text-primary"
+                      className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary-container/20 text-primary"
                     >
                       <Icon size={20} strokeWidth={1.75} />
                     </span>

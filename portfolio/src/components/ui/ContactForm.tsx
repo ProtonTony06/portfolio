@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 /**
  * Endpoint de Formspree para el formulario de contacto.
  *
- * Mismo endpoint que ComingSoon.tsx. Llega a antoniocuevaslopez@proton.me.
+ * Llega a antoniocuevaslopez@proton.me.
  * Plan gratis: 50 envíos/mes, suficiente para un portfolio personal.
  */
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvzneqwg";
@@ -116,7 +116,7 @@ export function ContactForm() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="flex flex-col items-center justify-center gap-4 rounded-xl border border-primary/30 bg-primary-container/20 p-8 text-center"
+            className="flex flex-col items-center justify-center gap-4 rounded-lg border border-primary/30 bg-primary-container/20 p-8 text-center"
             role="status"
           >
             <CheckCircle2
@@ -155,8 +155,11 @@ export function ContactForm() {
             <div>
               <label
                 htmlFor="contact-name"
-                className="mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant"
+                className="mb-2 block font-mono text-xs text-on-surface-variant"
               >
+                <span className="text-primary" aria-hidden="true">
+                  ~${" "}
+                </span>
                 Nombre
               </label>
               <input
@@ -169,15 +172,18 @@ export function ContactForm() {
                 value={values.name}
                 onChange={handleChange}
                 disabled={status === "loading"}
-                className="w-full rounded-lg border border-outline bg-background px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+                className="w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
               />
             </div>
 
             <div>
               <label
                 htmlFor="contact-email"
-                className="mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant"
+                className="mb-2 block font-mono text-xs text-on-surface-variant"
               >
+                <span className="text-primary" aria-hidden="true">
+                  ~${" "}
+                </span>
                 Email
               </label>
               <input
@@ -190,15 +196,18 @@ export function ContactForm() {
                 value={values.email}
                 onChange={handleChange}
                 disabled={status === "loading"}
-                className="w-full rounded-lg border border-outline bg-background px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+                className="w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
               />
             </div>
 
             <div>
               <label
                 htmlFor="contact-message"
-                className="mb-2 block font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant"
+                className="mb-2 block font-mono text-xs text-on-surface-variant"
               >
+                <span className="text-primary" aria-hidden="true">
+                  ~${" "}
+                </span>
                 Mensaje
               </label>
               <textarea
@@ -210,14 +219,14 @@ export function ContactForm() {
                 value={values.message}
                 onChange={handleChange}
                 disabled={status === "loading"}
-                className="w-full resize-y rounded-lg border border-outline bg-background px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+                className="w-full resize-y rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
               />
             </div>
 
             <button
               type="submit"
               disabled={status === "loading"}
-              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-on-primary shadow-glow transition-all hover:-translate-y-0.5 hover:shadow-glow-strong active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-glow"
+              className="group inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 font-mono text-sm font-semibold text-on-primary shadow-glow transition-all hover:-translate-y-0.5 hover:shadow-glow-strong active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-glow"
             >
               {status === "loading" ? (
                 <>

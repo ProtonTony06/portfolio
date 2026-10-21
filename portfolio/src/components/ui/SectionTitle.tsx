@@ -11,9 +11,9 @@ interface SectionTitleProps {
 /**
  * Encabezado de sección consistente en toda la app.
  *
- * - `eyebrow` opcional: etiqueta mono uppercase corta encima del título.
- * - `title`: el h2 principal (texto plano o JSX).
- * - `description`: párrafo muted debajo.
+ * - `eyebrow` opcional: comentario de terminal (`// etiqueta`) en dim.
+ * - `title`: el h2 principal (texto plano o JSX), mono.
+ * - `description`: párrafo dim debajo.
  * - `align`: izquierda (default) o centro. Skills usa centro.
  */
 export function SectionTitle({
@@ -29,11 +29,12 @@ export function SectionTitle({
   return (
     <div className={`flex flex-col gap-3 ${itemsAlignment} ${alignment} ${className}`}>
       {eyebrow && (
-        <span className="font-mono text-xs font-medium uppercase tracking-widest text-primary">
+        <span className="font-mono text-xs text-on-surface-variant">
+          <span aria-hidden="true">// </span>
           {eyebrow}
         </span>
       )}
-      <h2 className="font-sans text-3xl font-semibold tracking-tight text-on-surface md:text-4xl">
+      <h2 className="font-mono text-3xl font-semibold tracking-tight text-on-surface md:text-4xl">
         {title}
       </h2>
       {description && (

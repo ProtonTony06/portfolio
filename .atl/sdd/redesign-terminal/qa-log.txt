@@ -1,0 +1,213 @@
+==================================================================
+QA SUITE — change: redesign-terminal | proyecto: portfolio
+Herramienta de búsqueda: rg (rg o fallback grep -rE)
+Directorio de código: /home/acuelop369/Escritorio/Proyectos/portfolio/portfolio
+==================================================================
+
+=== QA-01: build verde — tsc + vite (GATE) [AC spec 7.1] ===
+$ cd portfolio && npm run build
+  PASS  exit code == 0 (obtenido: 0)
+>>> QA-01: PASS
+
+=== QA-02: sin residuos de tema — ThemeToggle/useTheme/ComingSoon/NotifyForm ===
+$ rg -l "ThemeToggle|useTheme" src/   (esperado: 0 ficheros, exit 1)
+  PASS  ficheros src/ con refs ThemeToggle|useTheme == 0 (obtenido: 0)
+$ rg -l "ComingSoon|NotifyForm" src/   (esperado: 0 ficheros)
+  PASS  ficheros src/ con refs ComingSoon|NotifyForm == 0 (obtenido: 0)
+$ ls src/hooks/useTheme.ts src/components/ui/ThemeToggle.tsx src/components/sections/ComingSoon.tsx src/components/ui/NotifyForm.tsx 2>/dev/null   (esperado: vacío)
+  PASS  los 4 ficheros huérfanos borrados físicamente (design §2) (obtenido: vacío)
+>>> QA-02: PASS
+
+=== QA-03: 0 hex MD3 antiguos en src/, tailwind.config.js, index.html ===
+$ rg -il "#10b981|#4edea3|#34d399|#45dfa4|#f59e0b|#ffb3af|#d1fae5|#0b1326|#f6f8fb|#171f33|#2d3449|#dbe2fd|#003824" src/ tailwind.config.js index.html
+  PASS  0 ficheros con hex MD3 antiguos (obtenido: 0)
+>>> QA-03: PASS
+
+=== QA-04: hex en globals.css subconjunto de la paleta terminal permitida ===
+$ rg -o "#[0-9a-fA-F]{6}" src/styles/globals.css | sort -u
+  [info] hex únicos presentes en globals.css:
+    #04120a
+    #070c09
+    #0a0f0d
+    #0d1511
+    #101a14
+    #123524
+    #14211a
+    #16211a
+    #16283a
+    #182619
+    #1c2b21
+    #332a10
+    #3a1412
+    #52e08a
+    #5f7a66
+    #6fb3f8
+    #cfe8d2
+    #f07168
+    #f5c542
+    #ffb4ab
+  PASS  0 hex fuera de paleta (obtenido: subconjunto correcto)
+  [nota] token 'error' usado → (ninguno detectado) + #f07168 (valor DESIGN)  (spec #f87171 vs design #f07168; pares surface-bright y surface-container-lowest análogos: resolución en sdd-verify)
+>>> QA-04: PASS
+
+=== QA-05: único meta theme-color #0a0f0d; cero script de tema (AC 7.5) ===
+$ rg -c "<meta[^>]*name=[\"'"']theme-color[\"'"']" index.html   (esperado: 1)
+  PASS  meta theme-color (conteo de líneas) == 1 (obtenido: 1)
+  PASS  meta theme-color content #0a0f0d == 1 (obtenido: 1)
+  PASS  meta theme-color SIN atributo media (conteo media= == 0) (obtenido: 0)
+  PASS  cero <script> de tema (obtenido: 1 <script>, todos entry module de Vite — DOUBT 2, no son de tema)
+>>> QA-05: PASS
+
+=== QA-06: bloque .dark ausente de globals.css; darkMode class presente en tailwind ===
+$ rg -n "^[[:space:]]*\.dark\b" src/styles/globals.css   (esperado: 0 — menciones en comentarios no cuentan)
+  PASS  selector .dark en globals.css == 0 (obtenido: 0)
+  PASS  darkMode en tailwind.config.js >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  darkMode.*['"]class['"] == 1 match (quedará sin efecto, design §3) (obtenido: 1)
+>>> QA-06: PASS
+
+=== QA-07: link Google Fonts JetBrains Mono en index.html; sin @fontsource ===
+$ rg -c "fonts.googleapis.com/css2\?family=JetBrains\+Mono" index.html   (esperado: 1)
+  PASS  link CSS2 de JetBrains Mono == 1 (obtenido: 1)
+$ rg -n "0,400;0,500;0,600;0,700;1,400" index.html   (esperado: >= 1)
+  PASS  pesos 400/500/600/700 + itálica 400 en el URL >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  preconnect fonts.gstatic.com >= 1 (obtenido: 1, esperado: >= 1)
+$ rg -l "@fontsource" src/ package.json   (esperado: 0 ficheros)
+  PASS  ficheros con @fontsource (src/ + package.json) == 0 (obtenido: 0)
+$ ls node_modules/@fontsource-variable 2>/dev/null   (esperado: vacío)
+  PASS  @fontsource-variable desinstalado físicamente (design §6) (obtenido: vacío)
+>>> QA-07: PASS
+
+=== QA-08: Familia única JetBrains Mono en Tailwind y body; Geist jubilado ===
+$ rg -n "sans.*JetBrains Mono" tailwind.config.js   (esperado: >= 1)
+  PASS  fontFamily.sans apunta a JetBrains Mono >= 1 (ventana -A6: definición multilínea) (obtenido: 1, esperado: >= 1)
+$ rg -n "mono.*JetBrains Mono" tailwind.config.js   (esperado: >= 1)
+  PASS  fontFamily.mono apunta a JetBrains Mono >= 1 (ventana -A6) (obtenido: 1, esperado: >= 1)
+$ rg -c "Geist" tailwind.config.js src/   (esperado: 0)
+  PASS  Geist restante (config + src/) == 0 (obtenido: 0)
+$ rg -n "font-sans" src/ -l   (informativo: usos existentes)
+    (0 usos — ver DOUBT 3: design corte 3 los quita)
+$ rg -n "body" -A3 src/styles/globals.css | rg "JetBrains Mono"   (esperado: >= 1)
+  PASS  font-family de body en globals.css == JetBrains Mono >= 1 (ventana -A6) (obtenido: 1, esperado: >= 1)
+  PASS  usos font-sans: 0 (obtenido: 0) — resuelto hacia design §8 corte 3; conflicto spec §2 vs design §8 (DOUBT 3) PARA sdd-verify
+>>> QA-08: PASS
+
+=== QA-09: cursor — @keyframes blink 1.1s steps(1); .terminal-cursor bg token ===
+$ rg -n "@keyframes blink" src/styles/globals.css   (esperado: >= 1)
+  PASS  @keyframes blink presente >= 1 (obtenido: 1, esperado: >= 1)
+$ rg -n "1\.1s steps\(1\)" src/styles/globals.css   (esperado: >= 1)
+  PASS  timing exacto blink 1.1s steps(1) >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  utilidad .terminal-cursor presente >= 1 (obtenido: 2, esperado: >= 1)
+$ rg -A8 "\.terminal-cursor" src/styles/globals.css | rg "var\(--md-sys-color-primary\)"   (esperado: >= 1)
+  PASS  background del cursor usa token (no hex) >= 1 (obtenido: 1, esperado: >= 1)
+>>> QA-09: PASS
+
+=== QA-10: radius sm 2px; glows verde concepto rgba(82,224,138) x2 ===
+$ rg -n "2px" tailwind.config.js (radius sm)   (esperado: >= 1)
+  PASS  radius sm "2px" presente >= 1 (obtenido: 2, esperado: >= 1)
+$ rg -n "rgba\(82, ?224, ?138" tailwind.config.js   (esperado: >= 2)
+  PASS  glows verdes (0.15 y 0.30) >= 2 (obtenido: 2, esperado: >= 2)
+  [nota] el emerald antiguo en boxShadow está cubierto por QA-03 (patrón hex #10b981).
+>>> QA-10: PASS
+
+=== QA-11: ventana terminal — 3 dots mac (aria-hidden), título, max-w-[820px] ===
+$ ls src/components/ui/TerminalWindow.tsx (nuevo componente, design §4)
+  PASS  dot mac rojo #ff5f57 >= 1 (excepción estética design §7) (obtenido: 2, esperado: >= 1)
+  PASS  dot mac ámbar #febc2e >= 1 (excepción estética design §7) (obtenido: 2, esperado: >= 1)
+  PASS  dot mac verde #28c840 >= 1 (excepción estética design §7) (obtenido: 2, esperado: >= 1)
+  PASS  dots decorativos aria-hidden >= 1 (obtenido: 1, esperado: >= 1)
+$ rg -n "antonio@portfolio" TERMINALWINDOW (o en Hero si el título llega como prop)
+  PASS  título de barra antonio@portfolio (TW o prop desde Hero) >= 1 (obtenido: 2, esperado: >= 1)
+  PASS  max-w-[820px] en la ventana >= 1 (obtenido: 1, esperado: >= 1)
+>>> QA-11: PASS
+
+=== QA-12: Hero — comandos derivados de profile.ts/projects.ts (BDD) ===
+  PASS  profile.name usado en Hero >= 1 (h1) (obtenido: 3, esperado: >= 1)
+  PASS  profile.tagline|location|title usados >= 3 (ocurrencias) (obtenido: 5, esperado: >= 3)
+  PASS  comando whoami >= 1 (línea 1, spec §3) (obtenido: 1, esperado: >= 1)
+  PASS  comando ls ~/proyectos >= 1 (línea 4, spec §3) (obtenido: 1, esperado: >= 1)
+  PASS  comando ver --proyectos >= 1 (línea 5, spec §3) (obtenido: 1, esperado: >= 1)
+  PASS  slug logic (toLowerCase().replace) O projects.map O 3 slugs literales (obtenido: toLowerCase.replace=1, projects.map=1, slugs=0)
+  PASS  prompt: antonio@portfolio (text-primary) y :~$ (text-on-surface-variant) (obtenido: text-primary=6, text-on-surface-variant=4, antonio@portfolio=1, :~$=1)
+  PASS  h1 (motion.h1) con clases font-bold/text-white (tono "name") (obtenido: motion.h1=1, font-bold|text-white=2)
+  [nota] h1 = motion.h1 + clase del TONE["name"] («font-bold text-white … text-[clamp(24px,5vw,38px)]»); AC 7.7 weight 700 computado → sdd-verify (plan §3 NOT cubierto 5).
+  PASS  h1 tamaño clamp(24px, 5vw, 38px) >= 1 (obtenido: 1, esperado: >= 1)
+>>> QA-12: PASS
+
+=== QA-13: CTAs ver proyectos / contactar / cv.pdf hacia anclas existentes ===
+  PASS  CTA href #projects >= 1 (sólido) (obtenido: 1, esperado: >= 1)
+  PASS  CTA sólido con bg-primary >= 1 (obtenido: 2, esperado: >= 1)
+  PASS  CTA href #contact >= 1 (outline) (obtenido: 1, esperado: >= 1)
+  PASS  CTA contactar con border-primary >= 1 (obtenido: 3, esperado: >= 1)
+  PASS  CTA cv.pdf → profile.cvUrl | /cv.pdf >= 1 (obtenido: 1, esperado: >= 1)
+$ ls public/cv.pdf   (existe; si no, find . -name "cv.pdf" -not -path "*/node_modules/*")
+  PASS  /cv.pdf físico accesible (obtenido: public/cv.pdf)
+  PASS  texto CTA "ver proyectos" >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  texto CTA "contactar" >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  texto CTA "cv.pdf" >= 1 (obtenido: 2, esperado: >= 1)
+>>> QA-13: PASS
+
+=== QA-14: hardcodes retirados (radial emerald, inner light, red-500, glass, dots) ===
+  PASS  radial emerald rgba(16,185,...) en src/ == 0 (obtenido: 0)
+  PASS  inner light inset 0 1px 0 rgba(255,...) en src/ == 0 (obtenido: 0)
+  PASS  text-red-500 en src/ == 0 (→ text-error token) (obtenido: 0)
+  PASS  glow-primary|gradient-bg|gradient-shift en src/ == 0 (obtenido: 0)
+  PASS  backdrop-blur (glass) en GlassCard == 0 (obtenido: 0)
+  PASS  fallbacks hex/blanco en dots de Carousel == 0 (obtenido: 0)
+  PASS  dots de Carousel via token primary >= 1 (obtenido: 1, esperado: >= 1)
+>>> QA-14: PASS
+
+=== QA-15: tecleo framer-motion + reduced-motion (estático; lo vivo NO cubierto) ===
+  PASS  rama reduce (useReducedMotion|usePrefersReducedMotion) en Hero >= 1 (obtenido: 3, esperado: >= 1)
+  PASS  cursor estático con reduced motion (motion-reduce:animate-none o bloque CSS prefers-reduced-motion) (obtenido: motion-reduce=0, .terminal-cursor{animation:none} en @media reduce=1 (globals.css))
+  [nota] implementación real: globals.css ⇒ .terminal-cursor { animation: none } dentro de @media (prefers-reduced-motion: reduce) — equivalente al motion-reduce:animate-none del design §4.
+  PASS  bloque global prefers-reduced-motion en globals.css >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  tecleo/reveal via framer-motion en Hero >= 1 (obtenido: 2, esperado: >= 1)
+  [nota] el timing real (40-80ms/char, 300ms, i*0.35) y el render vivo NO se cubren aquí (plan §3 NOT cubierto 3-4).
+>>> QA-15: PASS
+
+=== QA-16: responsive estático — min-w-0, flex-col, pre-wrap (0 overflow NO cubierto) ===
+  PASS  min-w-0 en TerminalWindow >= 1 (min-width: 0) (obtenido: 3, esperado: >= 1)
+  PASS  colapso/responsive móvil en Hero o TerminalWindow (flex-col o filas flex-wrap + min-w-0 + pre-wrap) (obtenido: flex-col=0, flex-wrap=2)
+  [nota] layout real: única ventana terminal (max-w-[820px]/1200px) a ancho completo — no hay columnas que colapsar; filas de contenido con flex-wrap + min-w-0 + whitespace-pre-wrap. Prueba real a 375px → sdd-verify (plan §3 NOT cubierto 1).
+  PASS  white-space: pre-wrap en Hero/TerminalWindow >= 1 (obtenido: 3, esperado: >= 1)
+  [nota] la prueba real a 375px viewport NO es automatizable aquí (plan §3 NOT cubierto 1).
+>>> QA-16: PASS
+
+=== QA-17: datos src/data/ intactos — git diff main...HEAD vacío ===
+$ git diff main...HEAD --stat -- portfolio/src/data/   (desde la raíz del repo; esperado: vacío)
+  PASS  diff vacío en portfolio/src/data/ (profile/projects/skills sin cambios) (obtenido: 0)
+>>> QA-17: PASS
+
+=== QA-18: (informativo) coherencia de skin — Header/ContactForm/Footer ===
+  PASS  logo estilo prompt (":~$") en Header >= 1 (obtenido: 2, esperado: >= 1)
+  PASS  labels ContactForm con prefijo prompt (~$ o >) >= 1 (obtenido: 3, esperado: >= 1)
+  PASS  mensaje de error via token text-error >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  borde superior line en Footer >= 1 (obtenido: 2, esperado: >= 1)
+  [nota] los textos exactos de logo/labels son flexibles (spec §4): aserción de presencia, no de copy.
+>>> QA-18: PASS
+
+=== QA-19: (informativo) anclas proyectos/contact y modal con callout terciario ===
+  PASS  ancla id="projects" en Projects.tsx >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  ancla id="contact" en Contact.tsx >= 1 (obtenido: 1, esperado: >= 1)
+  PASS  backdrop en ProjectModal >= 1 (obtenido: 4, esperado: >= 1)
+  PASS  callout en azul (tertiary) en ProjectModal >= 1 (obtenido: 4, esperado: >= 1)
+  [nota] flujos interactivos reales (abrir/cerrar modal, drawer, form) NO cubiertos (plan §3 NOT cubierto 8).
+>>> QA-19: PASS
+
+=== QA-20: (informativo) aliases --color-* siguen como indirección a tokens ===
+$ rg -n -- "--color-bg.*var\(--md-sys-color" src/styles/globals.css   (esperado: >= 1)
+  PASS  aliases --color-* = indirecciones var(--md-sys-color-*) >= 1 (obtenido: 2, esperado: >= 1)
+  [nota] usos de var(--color-) en src/ (esperado 0: los aliases no generan clases): 0
+>>> QA-20: PASS
+
+
+=== SANITY: grep 2.ª pasada agregada (design §8, corte 3) ===
+$ rg "rgba\(16, ?185|10b981|Geist|font-sans|ThemeToggle|useTheme|ComingSoon|NotifyForm" src/ index.html
+  PASS  0 hits agregados (obtenido: 0)
+
+==================================================================
+RESUMEN FINAL
+RESULTS: 20/20 pass
+  Fallos bloqueantes (bloquean el veredicto): ninguna
+  QA-18..QA-20 y SANITY son informativos: su FAIL se reporta y NO bloquea.
+STATUS: PASS
