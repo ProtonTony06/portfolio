@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
-import { profile } from "../../data/profile";
 
 const NAV_ITEMS = [
   { id: "hero", label: "Inicio" },
@@ -13,10 +12,10 @@ const NAV_ITEMS = [
 ] as const;
 
 /**
- * Header sticky con navegación anchor y toggle de tema.
+ * Header sticky estilo prompt.
  *
- * - Logo a la izquierda (usa el nombre del profile o "Portfolio" por defecto).
- * - Nav anchor links centrados (oculto en móvil).
+ * - Logo tipo prompt `antonio@portfolio:~$` a la izquierda.
+ * - Nav anchor links mono (oculta en móvil).
  * - Hamburger a la derecha.
  * - Resalta el link activo usando useScrollSpy.
  */
@@ -24,19 +23,18 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const activeId = useScrollSpy(NAV_ITEMS.map((i) => i.id));
 
-  const logoText = profile.name || "Portfolio";
-
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-outline-variant/30 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-outline-variant bg-background">
         <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
-          {/* Logo */}
+          {/* Logo tipo prompt */}
           <a
             href="#hero"
-            className="font-mono text-sm font-semibold uppercase tracking-widest text-on-surface transition-colors hover:text-primary"
+            className="font-mono text-sm transition-colors hover:text-secondary"
             aria-label="Ir al inicio"
           >
-            {logoText}
+            <span className="font-semibold text-primary">antonio@portfolio</span>
+            <span className="text-on-surface-variant">:~$</span>
           </a>
 
           {/* Nav desktop */}
@@ -51,10 +49,10 @@ export function Header() {
                   key={item.id}
                   href={`#${item.id}`}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative rounded-full px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest transition-colors ${
+                  className={`relative rounded px-4 py-2 font-mono text-xs transition-colors ${
                     isActive
                       ? "text-primary"
-                      : "text-on-surface-variant hover:text-on-surface"
+                      : "text-on-surface-variant hover:text-primary"
                   }`}
                 >
                   {item.label}
@@ -76,7 +74,7 @@ export function Header() {
               onClick={() => setMobileOpen(true)}
               aria-label="Abrir menú de navegación"
               aria-expanded={mobileOpen}
-              className="rounded-full p-2 text-on-surface transition-colors hover:bg-surface-container md:hidden"
+              className="rounded-sm p-2 text-on-surface transition-colors hover:text-primary md:hidden"
             >
               <Menu size={20} aria-hidden="true" />
             </button>

@@ -6,15 +6,15 @@ interface PillProps {
 }
 
 /**
- * Tag técnico estilo "chip". Usa JetBrains Mono en mayúsculas con tracking
- * abierto. Fondo emerald al 10%, texto primary.
+ * Chip técnico de terminal: borde outline-variant, radius 2px, texto mono dim.
+ * Sin fondo tintado ni glow (el vocabulario terminal es plano).
  *
  * Pensado para stack de proyectos, categorías, etiquetas técnicas.
  */
 export function Pill({ children, className = "" }: PillProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.24em] text-primary shadow-sm shadow-primary/10 transition-all ${className}`}
+      className={`inline-flex items-center rounded-sm border border-outline-variant px-3 py-1 font-mono text-xs text-on-surface-variant transition-colors ${className}`}
     >
       {children}
     </span>

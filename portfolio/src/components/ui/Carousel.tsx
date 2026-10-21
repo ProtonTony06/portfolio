@@ -151,7 +151,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
           type="button"
           onClick={() => goTo(index - 1)}
           aria-label="Imagen anterior"
-          className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface backdrop-blur transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+          className="absolute left-2 top-1/2 -translate-y-1/2 rounded-sm border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         >
           <ChevronLeft size={18} aria-hidden="true" />
         </button>
@@ -161,7 +161,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
           type="button"
           onClick={() => goTo(index + 1)}
           aria-label="Imagen siguiente"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface backdrop-blur transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         >
           <ChevronRight size={18} aria-hidden="true" />
         </button>
@@ -193,8 +193,8 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
                     width: active ? 18 : 6,
                     height: 6,
                     backgroundColor: active
-                      ? "var(--md-sys-color-primary, #10b981)"
-                      : "var(--md-sys-color-outline-variant, rgba(255,255,255,0.2))",
+                      ? "var(--md-sys-color-primary)"
+                      : "var(--md-sys-color-outline-variant)",
                   }}
                   animate={
                     reduceMotion

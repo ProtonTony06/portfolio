@@ -46,7 +46,7 @@ export function Contact() {
             {hasContactInfo && (
               <motion.div variants={fadeUp} className="flex flex-col gap-8">
                 <div>
-                  <h3 className="font-sans text-xl font-semibold tracking-tight text-on-surface">
+                  <h3 className="font-mono text-xl font-semibold tracking-tight text-on-surface">
                     Información de contacto
                   </h3>
                   <p className="mt-3 text-on-surface-variant">

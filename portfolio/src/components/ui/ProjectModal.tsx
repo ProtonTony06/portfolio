@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, Download, ExternalLink, Github, Info, X } from "lucide-react";
+import { Download, ExternalLink, Github, Info, X } from "lucide-react";
 import type { Project } from "../../data/projects";
 import { Carousel } from "./Carousel";
 import { Pill } from "./Pill";
@@ -17,7 +17,7 @@ interface ProjectModalProps {
  *
  * Patrón calcado de `MobileMenu`:
  * - `AnimatePresence` para entrada/salida.
- * - Backdrop oscuro con blur.
+ * - Backdrop oscuro (`bg-background/80`, sin blur: la terminal no tiene vidrio).
  * - Cierre por Escape, click en backdrop o botón X.
  * - Body scroll lock mientras está abierto.
  * - Devuelve el foco al elemento que lo abrió al cerrarse.
@@ -86,7 +86,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             transition={backdropTransition}
             onClick={onClose}
             aria-hidden="true"
-            className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-background/80"
           />
 
           {/* Caja del modal.
@@ -115,16 +115,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               }
               transition={modalTransition}
               onClick={(e) => e.stopPropagation()}
-              className="flex max-h-[90vh] flex-col overflow-hidden rounded-xl border border-outline-variant/40 bg-surface-container shadow-glow"
+              className="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-outline-variant bg-surface-container shadow-glow"
             >
             {/* Header sticky */}
             <header className="flex shrink-0 items-start justify-between gap-4 border-b border-outline-variant/40 px-6 py-4">
               <div className="min-w-0 flex-1">
                 <h2
                   id="project-modal-title"
-                  className="font-sans text-xl font-semibold tracking-tight text-on-surface sm:text-2xl"
+                  className="font-mono text-xl font-semibold tracking-tight text-secondary sm:text-2xl"
                 >
-                  {project.title}
+                  {project.title.toLowerCase().replace(/\s+/g, "")}
+                  <span className="text-on-surface-variant">/</span>
                 </h2>
                 <p className="mt-1 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
                   {project.year}
@@ -135,7 +136,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 type="button"
                 onClick={onClose}
                 aria-label="Cerrar"
-                className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                className="rounded-sm p-2 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <X size={20} aria-hidden="true" />
               </button>
@@ -172,7 +173,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               {/* Nota/alerta opcional (callout con borde izquierdo) */}
               {project.note && (
                 <div className="mb-6 flex items-start gap-3 rounded-r-lg border-l-4 border-tertiary bg-tertiary-container/40 px-4 py-3 text-sm text-on-surface">
-                  <AlertTriangle
+                  <Info
                     size={18}
                     className="mt-0.5 shrink-0 text-tertiary"
                     aria-hidden="true"
@@ -223,7 +224,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                         >
                           <span
                             aria-hidden="true"
-                            className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                            className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tertiary"
                           />
                           <span>{feature}</span>
                         </li>
@@ -241,7 +242,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   href={project.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-outline-variant/50 px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                  className="inline-flex items-center gap-2 rounded-sm border border-outline-variant px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 >
                   <Github size={16} aria-hidden="true" />
                   Código
@@ -258,7 +259,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     download={isDownload ? "" : undefined}
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-primary transition-all hover:-translate-y-0.5 hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                    className="inline-flex items-center gap-2 rounded-sm bg-primary px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-primary transition-all hover:-translate-y-0.5 hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                   >
                     {isDownload ? (
                       <Download size={16} aria-hidden="true" />
@@ -289,7 +290,7 @@ export function ProjectMoreInfoButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="mt-4 inline-flex items-center gap-2 self-start rounded-full border border-outline-variant/50 px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      className="mt-4 inline-flex items-center gap-2 self-start rounded-sm border border-outline-variant px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
     >
       <Info size={14} aria-hidden="true" />
       Ver más información

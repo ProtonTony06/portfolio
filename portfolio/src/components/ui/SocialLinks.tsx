@@ -81,7 +81,7 @@ export function SocialLinks({
             >
               <span
                 aria-hidden="true"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-container/20 text-primary transition-colors group-hover:bg-primary-container/40"
+                className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary-container/20 text-primary transition-colors group-hover:bg-primary-container/40"
               >
                 <Icon size={iconSize} strokeWidth={1.75} />
               </span>
@@ -103,7 +103,7 @@ export function SocialLinks({
               target: "_blank",
               rel: "noopener noreferrer",
             })}
-            className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant transition-colors hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-sm text-tertiary transition-colors hover:text-primary"
           >
             <Icon size={iconSize} strokeWidth={1.75} aria-hidden="true" />
             {labels && <span>{label}</span>}
