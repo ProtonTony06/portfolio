@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { ThemeToggle } from "../ui/ThemeToggle";
 
 interface NavItem {
   id: string;
@@ -116,14 +115,6 @@ export function MobileMenu({ open, onClose, items, activeId }: MobileMenuProps) 
                 );
               })}
             </nav>
-            <div className="absolute inset-x-0 bottom-0 border-t border-outline-variant/40 p-6">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                  Tema
-                </span>
-                <ThemeToggle />
-              </div>
-            </div>
           </motion.div>
         </>
       )}

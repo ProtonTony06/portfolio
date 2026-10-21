@@ -52,11 +52,11 @@ export default {
       },
       fontFamily: {
         sans: [
-          "Geist Variable",
-          "Geist",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
+          "JetBrains Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "monospace",
         ],
         mono: [
           "JetBrains Mono",
@@ -67,12 +67,12 @@ export default {
         ],
       },
       borderRadius: {
-        DEFAULT: "0.25rem",
-        sm: "0.125rem",
-        md: "0.375rem",
-        lg: "0.5rem",
-        xl: "0.75rem",
-        "2xl": "1rem",
+        DEFAULT: "4px",
+        sm: "2px",
+        md: "4px",
+        lg: "6px",
+        xl: "8px",
+        "2xl": "10px",
       },
       spacing: {
         gutter: "24px",
@@ -80,8 +80,8 @@ export default {
         "section-lg": "160px",
       },
       boxShadow: {
-        glow: "0 8px 32px rgba(16, 185, 129, 0.25)",
-        "glow-strong": "0 0 24px rgba(16, 185, 129, 0.4)",
+        glow: "0 0 24px rgba(82, 224, 138, 0.15)",
+        "glow-strong": "0 0 32px rgba(82, 224, 138, 0.30)",
       },
     },
   },

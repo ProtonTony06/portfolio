@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 /**
  * Endpoint de Formspree para el formulario de contacto.
  *
- * Mismo endpoint que ComingSoon.tsx. Llega a antoniocuevaslopez@proton.me.
+ * Llega a antoniocuevaslopez@proton.me.
  * Plan gratis: 50 envíos/mes, suficiente para un portfolio personal.
  */
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvzneqwg";

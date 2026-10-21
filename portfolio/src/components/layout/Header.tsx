@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { ThemeToggle } from "../ui/ThemeToggle";
 import { MobileMenu } from "./MobileMenu";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { profile } from "../../data/profile";
@@ -18,7 +17,7 @@ const NAV_ITEMS = [
  *
  * - Logo a la izquierda (usa el nombre del profile o "Portfolio" por defecto).
  * - Nav anchor links centrados (oculto en móvil).
- * - ThemeToggle + hamburger a la derecha.
+ * - Hamburger a la derecha.
  * - Resalta el link activo usando useScrollSpy.
  */
 export function Header() {
@@ -72,9 +71,6 @@ export function Header() {
 
           {/* Acciones derecha */}
           <div className="flex items-center gap-2">
-            <div className="hidden md:block">
-              <ThemeToggle />
-            </div>
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
