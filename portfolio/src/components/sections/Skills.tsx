@@ -3,6 +3,7 @@ import { SectionTitle } from "../ui/SectionTitle";
 import { SkillCard } from "../ui/SkillCard";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { skills } from "../../data/skills";
+import { useLang } from "../../i18n/useLang";
 
 /**
  * Sección Skills.
@@ -11,6 +12,7 @@ import { skills } from "../../data/skills";
  * (Frontend, Backend, Herramientas).
  */
 export function Skills() {
+  const { t } = useLang();
   const fadeUp = useFadeUp();
   const container = useStaggerContainer(120);
 
@@ -25,8 +27,8 @@ export function Skills() {
         >
           <motion.div variants={fadeUp} className="mb-12">
             <SectionTitle
-              eyebrow="Stack"
-              title="Habilidades técnicas"
+              eyebrow={t.skills.eyebrow}
+              title={t.skills.title}
               align="center"
             />
           </motion.div>

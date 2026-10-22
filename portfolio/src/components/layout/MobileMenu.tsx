@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { LangToggle } from "../ui/LangToggle";
+import { useLang } from "../../i18n/useLang";
 
 interface NavItem {
   id: string;
-  label: string;
 }
 
 interface MobileMenuProps {
@@ -22,9 +23,24 @@ interface MobileMenuProps {
  * - Click en un link (que primero hace scroll a la sección)
  * - Tecla Escape
  *
+ * Fila superior del drawer: label + toggle de idioma a la izquierda, cierre
+ * X a la derecha. Los labels de los ítems salen del diccionario mapeando
+ * el id de sección (`t.nav.*`); los anchors/ids no cambian (RF-13).
+ *
  * Restaura el scroll del body al cerrarse.
  */
 export function MobileMenu({ open, onClose, items, activeId }: MobileMenuProps) {
+  const { t } = useLang();
+
+  // Labels del diccionario por id de sección (el anchor "hero" → "Inicio").
+  const navLabels: Record<string, string> = {
+    hero: t.nav.home,
+    about: t.nav.about,
+    projects: t.nav.projects,
+    skills: t.nav.skills,
+    contact: t.nav.contact,
+  };
+
   // Cerrar con Escape
   useEffect(() => {
     if (!open) return;
@@ -76,20 +92,23 @@ export function MobileMenu({ open, onClose, items, activeId }: MobileMenuProps) 
             className="fixed inset-y-0 right-0 z-50 w-full max-w-sm border-l border-outline-variant bg-surface-container shadow-glow md:hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Menú de navegación"
+            aria-label={t.header.ariaMainNav}
           >
             <div className="flex items-center justify-between border-b border-outline-variant/40 px-6 py-4">
               <span className="font-mono text-xs text-on-surface-variant">
-                Menú
+                {t.header.menu}
               </span>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Cerrar menú"
-                className="rounded-sm p-2 text-on-surface-variant transition-colors hover:text-primary"
-              >
-                <X size={20} aria-hidden="true" />
-              </button>
+              <div className="flex items-center gap-1">
+                <LangToggle />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label={t.header.ariaCloseMenu}
+                  className="rounded-sm p-2 text-on-surface-variant transition-colors hover:text-primary"
+                >
+                  <X size={20} aria-hidden="true" />
+                </button>
+              </div>
             </div>
             <nav className="flex flex-col gap-1 p-6">
               {items.map((item) => {
@@ -106,7 +125,7 @@ export function MobileMenu({ open, onClose, items, activeId }: MobileMenuProps) 
                     }`}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    {item.label}
+                    {navLabels[item.id] ?? item.id}
                     {isActive && (
                       <span
                         aria-hidden="true"

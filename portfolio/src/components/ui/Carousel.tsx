@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useLang } from "../../i18n/useLang";
 
 interface CarouselProps {
   images: string[];
@@ -28,6 +29,7 @@ interface CarouselProps {
  */
 export function Carousel({ images, alt, className = "" }: CarouselProps) {
   const reduceMotion = usePrefersReducedMotion();
+  const { t } = useLang();
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [index, setIndex] = useState(0);
 
@@ -110,7 +112,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
         ref={trackRef}
         tabIndex={0}
         role="region"
-        aria-label={`Carrusel de imágenes de ${alt}`}
+        aria-label={t.carousel.region(alt)}
         onKeyDown={handleKeyDown}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg border border-outline-variant/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         style={{ scrollbarWidth: "none" }}
@@ -125,7 +127,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
               key={i}
               className="relative w-full shrink-0 snap-center"
               aria-roledescription="slide"
-              aria-label={`${i + 1} de ${count}`}
+              aria-label={t.carousel.dot(i + 1, count)}
             >
               <img
                 src={src}
@@ -150,7 +152,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
         <button
           type="button"
           onClick={() => goTo(index - 1)}
-          aria-label="Imagen anterior"
+          aria-label={t.carousel.prev}
           className="absolute left-2 top-1/2 -translate-y-1/2 rounded-sm border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         >
           <ChevronLeft size={18} aria-hidden="true" />
@@ -160,7 +162,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
         <button
           type="button"
           onClick={() => goTo(index + 1)}
-          aria-label="Imagen siguiente"
+          aria-label={t.carousel.next}
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm border border-outline-variant/40 bg-surface-container/80 p-2 text-on-surface transition-colors hover:bg-surface-container-high hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
         >
           <ChevronRight size={18} aria-hidden="true" />
@@ -171,7 +173,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
       {showControls && (
         <div
           role="tablist"
-          aria-label="Selector de imagen"
+          aria-label={t.carousel.dots}
           className="mt-3 flex items-center justify-center gap-2"
         >
           {images.map((_, i) => {
@@ -182,7 +184,7 @@ export function Carousel({ images, alt, className = "" }: CarouselProps) {
                 type="button"
                 role="tab"
                 aria-selected={active}
-                aria-label={`Ir a imagen ${i + 1}`}
+                aria-label={t.carousel.goTo(i + 1)}
                 onClick={() => goTo(i)}
                 className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               >

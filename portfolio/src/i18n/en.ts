@@ -48,7 +48,7 @@ export const en: Dic = {
     title: "Featured projects",
     description: "A selection of my most recent work.",
     emptyTitle: "No projects to show yet.",
-    emptyHint: "…to add the first one.",
+    emptyHint: "Edit src/data/projects.ts to add the first one.",
     moreInfo: "More info",
     featuresTitle: "Features",
     code: "Source",
@@ -72,7 +72,8 @@ export const en: Dic = {
     description:
       "Got a project in mind? Send me a message and I'll get back to you shortly.",
     infoTitle: "Contact information",
-    infoLead: "Message me through your preferred channel.",
+    infoLead:
+      "I'm available for freelance projects and collaborations. Message me through your preferred channel.",
   },
   form: {
     name: "Name",

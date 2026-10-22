@@ -1,27 +1,35 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
+import { LangToggle } from "../ui/LangToggle";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
+import { useLang } from "../../i18n/useLang";
 
-const NAV_ITEMS = [
-  { id: "hero", label: "Inicio" },
-  { id: "about", label: "Sobre mí" },
-  { id: "projects", label: "Proyectos" },
-  { id: "skills", label: "Habilidades" },
-  { id: "contact", label: "Contacto" },
-] as const;
+/** Ids de sección para scroll-spy y anchors (RF-13: los ids no cambian). */
+const NAV_ITEMS = [{ id: "hero" }, { id: "about" }, { id: "projects" }, { id: "skills" }, { id: "contact" }] as const;
+
+type NavId = (typeof NAV_ITEMS)[number]["id"];
 
 /**
  * Header sticky estilo prompt.
  *
  * - Logo tipo prompt `antonio@portfolio:~$` a la izquierda.
- * - Nav anchor links mono (oculta en móvil).
- * - Hamburger a la derecha.
+ * - Nav anchor links mono (oculta en móvil), labels del diccionario.
+ * - Toggle de idioma + hamburger a la derecha.
  * - Resalta el link activo usando useScrollSpy.
  */
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const activeId = useScrollSpy(NAV_ITEMS.map((i) => i.id));
+  const { t } = useLang();
+
+  const navLabels: Record<NavId, string> = {
+    hero: t.nav.home,
+    about: t.nav.about,
+    projects: t.nav.projects,
+    skills: t.nav.skills,
+    contact: t.nav.contact,
+  };
 
   return (
     <>
@@ -31,7 +39,7 @@ export function Header() {
           <a
             href="#hero"
             className="font-mono text-sm transition-colors hover:text-secondary"
-            aria-label="Ir al inicio"
+            aria-label={t.header.ariaHome}
           >
             <span className="font-semibold text-primary">antonio@portfolio</span>
             <span className="text-on-surface-variant">:~$</span>
@@ -40,7 +48,7 @@ export function Header() {
           {/* Nav desktop */}
           <nav
             className="hidden items-center gap-1 md:flex"
-            aria-label="Navegación principal"
+            aria-label={t.header.ariaMainNav}
           >
             {NAV_ITEMS.map((item) => {
               const isActive = activeId === item.id;
@@ -55,7 +63,7 @@ export function Header() {
                       : "text-on-surface-variant hover:text-primary"
                   }`}
                 >
-                  {item.label}
+                  {navLabels[item.id]}
                   {isActive && (
                     <span
                       aria-hidden="true"
@@ -69,10 +77,11 @@ export function Header() {
 
           {/* Acciones derecha */}
           <div className="flex items-center gap-2">
+            <LangToggle />
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              aria-label="Abrir menú de navegación"
+              aria-label={t.header.ariaOpenMenu}
               aria-expanded={mobileOpen}
               className="rounded-sm p-2 text-on-surface transition-colors hover:text-primary md:hidden"
             >

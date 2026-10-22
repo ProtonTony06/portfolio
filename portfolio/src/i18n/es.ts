@@ -54,7 +54,8 @@ export const es = {
     title: "Proyectos destacados",
     description: "Una selección de mis trabajos más recientes.",
     emptyTitle: "Aún no hay proyectos para mostrar.",
-    emptyHint: "…para añadir el primero.",
+    /** Fila vacía cuando `projects` va vacío en data/projects.ts (estado placeholder). */
+    emptyHint: "Edita src/data/projects.ts para añadir el primero.",
     moreInfo: "Ver más información",
     featuresTitle: "Funcionalidades",
     code: "Código",
@@ -81,7 +82,9 @@ export const es = {
     description:
       "¿Tienes un proyecto en mente? Escríbeme y te respondo pronto.",
     infoTitle: "Información de contacto",
-    infoLead: "Escríbeme por el canal que prefieras.",
+    /** Frase completa de la fila de info (diseño §2 traía solo la 2ª frase; ver apply-progress). */
+    infoLead:
+      "Estoy disponible para proyectos freelance o colaboraciones. Escríbeme por el canal que prefieras.",
   },
   /** ContactForm. */
   form: {

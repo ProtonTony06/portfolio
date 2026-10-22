@@ -5,7 +5,7 @@ import { SocialLinks } from "../ui/SocialLinks";
 import { GlassCard } from "../ui/GlassCard";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { profile } from "../../data/profile";
-import { readLocalized } from "../../i18n/localize";
+import { useLang } from "../../i18n/useLang";
 
 /**
  * Sección Contact.
@@ -16,6 +16,7 @@ import { readLocalized } from "../../i18n/localize";
  * Si no hay email configurado, no se muestra el bloque de info (silencio).
  */
 export function Contact() {
+  const { t, pick } = useLang();
   const fadeUp = useFadeUp();
   const container = useStaggerContainer(100);
 
@@ -35,9 +36,9 @@ export function Contact() {
         >
           <motion.div variants={fadeUp} className="mb-16 text-center">
             <SectionTitle
-              eyebrow="Contacto"
-              title="¿Hablamos?"
-              description="¿Tienes un proyecto en mente? Escríbeme y te respondo pronto."
+              eyebrow={t.contact.eyebrow}
+              title={t.contact.title}
+              description={t.contact.description}
               align="center"
             />
           </motion.div>
@@ -48,17 +49,16 @@ export function Contact() {
               <motion.div variants={fadeUp} className="flex flex-col gap-8">
                 <div>
                   <h3 className="font-mono text-xl font-semibold tracking-tight text-on-surface">
-                    Información de contacto
+                    {t.contact.infoTitle}
                   </h3>
                   <p className="mt-3 text-on-surface-variant">
-                    Estoy disponible para proyectos freelance o colaboraciones.
-                    Escríbeme por el canal que prefieras.
+                    {t.contact.infoLead}
                   </p>
                 </div>
                 <SocialLinks variant="stacked" iconSize={18} />
                 {profile.location && (
                   <p className="font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                    {readLocalized(profile.location, "es")}
+                    {pick(profile.location)}
                   </p>
                 )}
               </motion.div>

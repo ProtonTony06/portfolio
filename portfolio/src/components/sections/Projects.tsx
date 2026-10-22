@@ -5,6 +5,7 @@ import { ProjectCard } from "../ui/ProjectCard";
 import { ProjectModal } from "../ui/ProjectModal";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { projects, type Project } from "../../data/projects";
+import { useLang } from "../../i18n/useLang";
 
 /**
  * Sección Projects.
@@ -17,6 +18,7 @@ import { projects, type Project } from "../../data/projects";
  * - el foco pueda volver al botón "Ver más información" que lo abrió.
  */
 export function Projects() {
+  const { t } = useLang();
   const fadeUp = useFadeUp();
   const container = useStaggerContainer(120);
   const [openProject, setOpenProject] = useState<Project | null>(null);
@@ -35,9 +37,9 @@ export function Projects() {
         >
           <motion.div variants={fadeUp} className="mb-12">
             <SectionTitle
-              eyebrow="Trabajo"
-              title="Proyectos destacados"
-              description="Una selección de mis trabajos más recientes."
+              eyebrow={t.projects.eyebrow}
+              title={t.projects.title}
+              description={t.projects.description}
             />
           </motion.div>
 
@@ -47,14 +49,10 @@ export function Projects() {
               className="rounded-xl border border-dashed border-outline-variant/50 bg-surface-container/30 p-12 text-center"
             >
               <p className="text-on-surface-variant">
-                Aún no hay proyectos para mostrar.
+                {t.projects.emptyTitle}
                 <br />
                 <span className="font-mono text-sm text-on-surface-variant/70">
-                  Edita{" "}
-                  <code className="rounded bg-surface-container-high px-1.5 py-0.5">
-                    src/data/projects.ts
-                  </code>{" "}
-                  para añadir el primero.
+                  {t.projects.emptyHint}
                 </span>
               </p>
             </motion.div>
