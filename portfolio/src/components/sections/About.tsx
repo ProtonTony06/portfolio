@@ -5,6 +5,7 @@ import { SectionTitle } from "../ui/SectionTitle";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { profile } from "../../data/profile";
 import { skills } from "../../data/skills";
+import { readLocalized } from "../../i18n/localize";
 
 const STACK_ICONS = [
   { key: "frontend", label: "Frontend", icon: Code2 },
@@ -50,7 +51,7 @@ export function About() {
               variants={fadeUp}
               className="text-base text-on-surface-variant md:text-lg"
             >
-              {profile.about ||
+              {readLocalized(profile.about, "es") ||
                 "Aquí irá una descripción sobre ti. Edita data/profile.ts para añadirla."}
             </motion.p>
 
@@ -94,13 +95,13 @@ export function About() {
               // Si no hay skills, mostramos el label genérico.
               const categoryMap: Record<string, string> = {
                 frontend:
-                  skills.find((s) => s.category === "Frontend")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "frontend")?.items.slice(0, 2).join(" / ") ||
                   "React / Vue",
                 backend:
-                  skills.find((s) => s.category === "Backend")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "backend")?.items.slice(0, 2).join(" / ") ||
                   "Node / Python",
                 tooling:
-                  skills.find((s) => s.category === "Herramientas")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "tools")?.items.slice(0, 2).join(" / ") ||
                   "Git / Docker",
                 other: "PostgreSQL / Redis",
               };

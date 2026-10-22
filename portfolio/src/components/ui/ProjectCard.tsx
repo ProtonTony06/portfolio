@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Download, ExternalLink, Github, ImageOff } from "lucide-react";
 import type { Project } from "../../data/projects";
+import { readLocalized } from "../../i18n/localize";
 import { GlassCard } from "./GlassCard";
 import { ProjectMoreInfoButton } from "./ProjectModal";
 
@@ -62,7 +63,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
         {/* Descripción */}
         <p className="mt-2 line-clamp-3 text-[13px] text-on-surface-variant">
-          {project.description}
+          {readLocalized(project.description, "es")}
         </p>
 
         {/* Tags en texto plano, separados por " · " */}

@@ -5,6 +5,7 @@ import { SocialLinks } from "../ui/SocialLinks";
 import { GlassCard } from "../ui/GlassCard";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { profile } from "../../data/profile";
+import { readLocalized } from "../../i18n/localize";
 
 /**
  * Sección Contact.
@@ -57,7 +58,7 @@ export function Contact() {
                 <SocialLinks variant="stacked" iconSize={18} />
                 {profile.location && (
                   <p className="font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                    {profile.location}
+                    {readLocalized(profile.location, "es")}
                   </p>
                 )}
               </motion.div>

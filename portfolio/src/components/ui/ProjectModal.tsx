@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Download, ExternalLink, Github, Info, X } from "lucide-react";
 import type { Project } from "../../data/projects";
+import { readLocalized } from "../../i18n/localize";
 import { Carousel } from "./Carousel";
 import { Pill } from "./Pill";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
@@ -72,6 +73,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const modalTransition = reduceMotion
     ? { duration: 0 }
     : { duration: 0.25, ease: "easeOut" as const };
+
+  // Shim temporal de corte 2 (comportamiento idéntico al mono-idioma): corte 3
+  // sustituye readLocalized(x, "es") por pick del provider.
+  const features = project?.features
+    ? readLocalized(project.features, "es")
+    : undefined;
 
   return createPortal(
     <AnimatePresence>
@@ -178,7 +185,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     className="mt-0.5 shrink-0 text-tertiary"
                     aria-hidden="true"
                   />
-                  <p>{project.note}</p>
+                  <p>{readLocalized(project.note, "es")}</p>
                 </div>
               )}
 
@@ -195,7 +202,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
               {/* Descripción corta */}
               <p className="text-base text-on-surface-variant">
-                {project.description}
+                {readLocalized(project.description, "es")}
               </p>
 
               {/* Descripción larga */}
@@ -203,13 +210,13 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <>
                   <hr className="my-6 border-outline-variant/40" />
                   <p className="whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">
-                    {project.longDescription}
+                    {readLocalized(project.longDescription, "es")}
                   </p>
                 </>
               )}
 
               {/* Features */}
-              {project.features && project.features.length > 0 && (
+              {features && features.length > 0 && (
                 <>
                   <hr className="my-6 border-outline-variant/40" />
                   <div>
@@ -217,7 +224,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                       Funcionalidades
                     </h3>
                     <ul className="flex flex-col gap-2">
-                      {project.features.map((feature, idx) => (
+                      {features.map((feature, idx) => (
                         <li
                           key={idx}
                           className="flex items-start gap-3 text-sm text-on-surface-variant"

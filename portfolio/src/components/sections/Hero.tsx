@@ -4,6 +4,7 @@ import { EASE_OUT, useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { profile } from "../../data/profile";
 import { projects } from "../../data/projects";
+import { readLocalized } from "../../i18n/localize";
 import { TerminalWindow } from "../ui/TerminalWindow";
 
 /**
@@ -55,8 +56,10 @@ const TONE_CLASS: Record<Tone, string> = {
 const steps: TermStep[] = [
   { kind: "cmd", text: "whoami" },
   { kind: "out", tone: "name", text: profile.name },
-  { kind: "out", tone: "role", text: profile.tagline || "Full-Stack Developer" },
-  { kind: "out", tone: "dim", text: `${profile.location} — ${profile.title}` },
+  // Shim temporal de corte 2 (comportamiento idéntico al mono-idioma): corte 3
+  // sustituye readLocalized(x, "es") por pick del provider.
+  { kind: "out", tone: "role", text: readLocalized(profile.tagline, "es") || "Full-Stack Developer" },
+  { kind: "out", tone: "dim", text: `${readLocalized(profile.location, "es")} — ${readLocalized(profile.title, "es")}` },
   { kind: "cmd", text: "ls ~/proyectos" },
   {
     kind: "out",
@@ -240,7 +243,7 @@ export function Hero() {
                     {profile.email}
                   </a>
                 )}
-                {profile.location && <span>{profile.location}</span>}
+                {profile.location && <span>{readLocalized(profile.location, "es")}</span>}
               </motion.div>
             </motion.div>
           )}

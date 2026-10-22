@@ -36,7 +36,7 @@ export function Skills() {
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {skills.map((skill) => (
-              <motion.div key={skill.category} variants={fadeUp}>
+              <motion.div key={skill.id} variants={fadeUp}>
                 <SkillCard skill={skill} />
               </motion.div>
             ))}

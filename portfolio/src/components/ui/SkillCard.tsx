@@ -1,4 +1,5 @@
 import type { SkillCategory } from "../../data/skills";
+import { readLocalized } from "../../i18n/localize";
 import { GlassCard } from "./GlassCard";
 
 interface SkillCardProps {
@@ -24,7 +25,7 @@ export function SkillCard({ skill }: SkillCardProps) {
 
       {/* Título: ruta carpeta ~/{categoria}/ */}
       <h3 className="font-mono text-sm font-semibold text-secondary">
-        ~/{skill.category.toLowerCase().replace(/\s+/g, "")}/
+        ~/{readLocalized(skill.category, "es").toLowerCase().replace(/\s+/g, "")}/
       </h3>
 
       {/* Lista de items */}
