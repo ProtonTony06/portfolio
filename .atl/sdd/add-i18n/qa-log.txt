@@ -1,0 +1,1345 @@
+================================================================
+QA-LOG (salida en crudo) — add-i18n · delegación C (qa-run)
+commit bajo test: 88edd590b3c73eb7919ce8261bba44464b21e6ed (rama develop)
+fecha: 2026-10-22
+proyecto npm: /home/acuelop369/Escritorio/Proyectos/portfolio/portfolio
+Rutas: ROOT=/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio · SRC=$ROOT/src
+Cada encabezado "$ <comando>" indica lo ejecutado; la salida debajo de cada uno
+es la salida verbatim del terminal. EXIT_CODE/EXIT=N es el código de salida.
+================================================================
+
+$ git log -1 --format=%H
+88edd590b3c73eb7919ce8261bba44464b21e6ed
+
+$ npm run build 2>&1; echo "EXIT_CODE=$?"
+> portfolio@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1964 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.99 kB │ gzip:   0.53 kB
+dist/assets/index-CJk3hVxI.css   21.35 kB │ gzip:   4.90 kB
+dist/assets/index-PvnghcxS.js   320.04 kB │ gzip: 101.47 kB
+✓ built in 2.59s
+EXIT_CODE=0
+
+$ npm run lint 2>&1; echo "EXIT_CODE=$?"
+> portfolio@0.0.0 lint
+> eslint .
+
+EXIT_CODE=0
+
+$ grep -iE 'i18next|react-intl|lingui|formatjs|next-intl|react-i18next' "$ROOT/package.json"
+EXIT=1
+
+$ grep -rnE 'import\(' "$SRC/i18n" "$SRC/data"
+EXIT=1
+
+$ ls "$SRC/i18n"
+context.ts
+en.ts
+es.ts
+I18nProvider.tsx
+localize.ts
+types.ts
+useLang.ts
+
+$ grep -ln 'export' "$SRC/i18n"/*
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/useLang.ts
+
+$ grep -n 'I18nProvider' "$SRC/main.tsx"
+5:import { I18nProvider } from "./i18n/I18nProvider";
+9:    <I18nProvider>
+11:    </I18nProvider>
+EXIT=0
+
+$ grep -n 'documentElement' "$SRC/i18n/I18nProvider.tsx"
+28:    document.documentElement.lang = lang;
+EXIT=0
+
+$ grep -n 'localStorage' "$SRC/i18n/I18nProvider.tsx"
+3: * 1. Idioma inicial: localStorage `portfolio-lang` (try/catch) →
+24:      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+EXIT=0
+
+$ grep -n 'navigator.language' "$SRC/i18n/I18nProvider.tsx"
+4: *    detección `navigator.language` /^en/ → "es" (RF-2/RF-3, ver context.ts).
+EXIT=0
+
+$ grep -rn 'LangToggle' "$SRC/components/layout" "$SRC/components/ui"
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:4:import { LangToggle } from "../ui/LangToggle";
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:102:                <LangToggle />
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:3:interface LangToggleProps {
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:22:export function LangToggle({ className }: LangToggleProps) {
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:4:import { LangToggle } from "../ui/LangToggle";
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:80:            <LangToggle />
+EXIT=0
+
+$ grep -nE 'role="group"|aria-pressed|aria-label|focus-visible' "$SRC/components/ui/LangToggle.tsx"
+17: * A11y (RNF-1/CA-7): `role="group"` con aria-label "Cambiar idioma" y dos
+18: * botones con `aria-pressed` + nombre accesible dinámico (siempre en el
+27:      role="group"
+28:      aria-label={t.common.langGroup}
+35:          aria-pressed={lang === value}
+36:          aria-label={value === "es" ? t.common.langEs : t.common.langEn}
+38:          className={`rounded-sm px-1.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
+EXIT=0
+
+$ grep -nE 'rounded-full|rounded-xl|rounded-2xl|bg-white' "$SRC/components/ui/LangToggle.tsx"
+EXIT=1
+
+$ grep -nE 'font-mono|text-primary|rounded-sm' "$SRC/components/ui/LangToggle.tsx"
+12: * (aria-hidden). El token activo va en `text-primary` con borde
+29:      className={`flex items-center gap-0.5 font-mono text-xs ${className ?? ""}`}
+38:          className={`rounded-sm px-1.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
+40:              ? "border border-primary/60 text-primary"
+41:              : "border border-transparent text-on-surface-variant hover:text-primary"
+45:          <span aria-hidden="true" className="text-primary/70">
+49:          <span aria-hidden="true" className="text-primary/70">
+EXIT=0
+
+$ grep -n 'key=' "$SRC/components/sections/Hero.tsx"
+22: * `key={lang}`: al cambiar de idioma se re-empeza TODO (steps del nuevo
+148:  return <HeroSession key={lang} />;
+189:                  key={i}
+201:                key={i}
+EXIT=0
+
+$ grep -n 'useTypewriter' "$SRC/components/sections/Hero.tsx"
+99:function useTypewriter(steps: TermStep[], reduce: boolean) {
+159:  const { step, chars, done } = useTypewriter(steps, reduce);
+EXIT=0
+
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC" --include='*.ts' --include='*.tsx' -l
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/GlassCard.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/App.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/usePrefersReducedMotion.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/lib/animations.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts
+EXIT=0
+
+$ grep -rniE '"(ver proyectos|contactar|enviar|nombre|mensaje|estado:|Habilidades|Sobre mí|próximamente)' "$SRC" --include='*.ts' --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:14:    about: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:16:    skills: "Habilidades",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:37:    ctaProjects: "ver proyectos",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:38:    ctaContact: "contactar",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:42:    eyebrow: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:46:    cvComingSoon: "Próximamente",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:74:    title: "Habilidades técnicas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:91:    name: "Nombre",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:93:    message: "Mensaje",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:96:    submit: "Enviar mensaje",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:100:    sendAnother: "Enviar otro",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:110:    statusLabel: "estado:",
+EXIT=0
+
+$ grep -rnE 'aria-label="[^{"]' "$SRC" --include='*.tsx'
+EXIT=1
+
+$ grep -rnE 'placeholder="[^{]' "$SRC" --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:197:                placeholder="tu@email.com"
+EXIT=0
+
+$ grep -rnE '\{project\.(description|longDescription)|\{profile\.(tagline|title|about|location)' "$SRC" --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:59:                {profile.location && (
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:279:                {profile.location && <span>{pick(profile.location)}</span>}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:207:              {project.longDescription && (
+EXIT=0
+
+$ grep -nE '(description|longDescription|features|note):' "$SRC/data/projects.ts"
+12:  description: Localized<string>;
+31:    description: {
+35:    longDescription: {
+39:    features: {
+69:    note: {
+76:    description: {
+80:    longDescription: {
+84:    features: {
+120:    note: {
+127:    description: {
+131:    longDescription: {
+135:    features: {
+EXIT=0
+
+$ grep -n 'category' "$SRC/data/skills.ts"
+9: * consumidores hacen matching por él, nunca por el texto de `category`.
+10: * `category` es `Localized<string>`: `{ es, en }` ("Frontend"/"Backend" son
+20:  category: Localized<string>;
+28:    category: { es: "Frontend", en: "Frontend" },
+35:    category: { es: "Backend", en: "Backend" },
+42:    category: { es: "Herramientas", en: "Tools" },
+EXIT=0
+
+$ grep -rnE 'readLocalized\(([^,]+),\s*"es"' "$SRC" --include='*.ts' --include='*.tsx'
+EXIT=1
+
+$ grep -rnE 'id="(hero|about|projects|skills|contact)"' "$SRC" --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:36:    <section id="about" className="px-6 py-section">
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:27:      id="contact"
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:167:    <section id="hero" className="relative flex min-h-[calc(100vh-4rem)] items-center">
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:20:    <section id="skills" className="px-6 py-section-lg">
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:28:      id="projects"
+EXIT=0
+
+$ grep -rcn 'pick(' "$SRC/components" "$SRC/sections"
+ugrep: warning: /home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/sections: No such file or directory
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:1
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:1
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:3
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/GlassCard.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:4
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:1
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:0
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:1
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:0
+EXIT=2
+
+$ grep -rnE 'aria-label="[A-ZÁÉÍÓÚ]' "$SRC/components" --include='*.tsx'
+EXIT=1
+
+$ grep -nE '^\s+(tagline|title|about|location):' "$SRC/data/profile.ts"
+18:  tagline: { es: "Full-Stack Developer", en: "Full-Stack Developer" } satisfies Localized<string>,
+20:  title: {
+27:  location: { es: "Sevilla, España", en: "Sevilla, Spain" } satisfies Localized<string>,
+33:  about: {
+EXIT=0
+
+----------------------------------------------------------------
+INSPECCIÓN-CÓDIGO (fragmentos leídos, verbatim, para aserciones de ESTADO)
+----------------------------------------------------------------
+
+$ sed -n '93,105p' "$SRC/components/ui/ProjectModal.tsx"
+            aria-hidden="true"
+            className="fixed inset-0 z-[60] bg-background/80"
+          />
+
+          {/* Caja del modal.
+              El wrapper externo (fijo + centrado con translate-1/2) NO se anima
+              para que el centrado no se rompa: framer-motion sobreescribe la
+              propiedad `transform` durante la animación de scale, lo que
+              machacaría el `-translate-x-1/2 -translate-y-1/2`. El scale y la
+              opacidad se aplican a un `<motion.div>` interior. */}
+          <div
+            className="fixed left-1/2 top-1/2 z-[60] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2"
+          >
+
+$ sed -n '145,152p' "$SRC/components/ui/Carousel.tsx"
+          );
+        })}
+      </div>
+
+      {/* Flechas. La izquierda se oculta en la primera imagen, la derecha
+          en la última. Así el usuario no puede ir más allá de los extremos. */}
+      {showControls && index > 0 && (
+        <button
+
+$ grep -niP '[áéíóúñ¿¡]' "$SRC/i18n/en.ts"
+2: * Diccionario inglés. Tipado contra el shape del español:
+3: * `export const en: Dic` garantiza claves idénticas a `es.ts` — cualquier
+6: * Terminología fijada por spec §6 (Home/About/Projects/Skills/Contact,
+8: * Tono técnico y directo; primera persona donde el español la usa.
+EXIT=0
+
+$ grep -niP '[áéíóúñ¿¡]' "$SRC/i18n/context.ts" "$SRC/i18n/useLang.ts" "$SRC/i18n/localize.ts" "$SRC/i18n/types.ts" "$SRC/i18n/I18nProvider.tsx"
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:2: * Selección de lado de un campo Localized. Lógica pura, sin React —
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:4: * `pick` del provider es exactamente esta función con el lang del context:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:5: * una sola implementación del fallback, dos puntos de entrada.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:10: * Devuelve el lado activo del campo; si va VACÍO (string "" o array []),
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:2: * Provider del idioma: única fuente de verdad (RF-15).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:4: *    detección `navigator.language` /^en/ → "es" (RF-2/RF-3, ver context.ts).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:6: *    de modo que también el primer render sincroniza sin código extra.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:16:/** Wrapper del árbol (única fuente de verdad del idioma, RF-15). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:2: * Contratos puros de i18n. Type-only: nada de runtime aquí.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:4: * Árbol de dependencias (acyclic):
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:19:  /** Idioma activo. Única fuente de verdad (localStorage + <html lang> derivan de él). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:2: * Context + persistencia/detección del idioma, en un fichero sin componentes.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:5: * §1.3 agrupaba esto en el Provider; la firma y semántica no cambian).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:12:/** Clave de persistencia (plan, decisión 2; NO se traduce). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:19: * storage bloqueado solo cuesta la detección, nunca un render roto, RNF-4).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:26:    // storage bloqueado → sigue a detección
+EXIT=0
+
+$ grep -n 'export const es\|export type Dic\|as const' "$SRC/i18n/es.ts"
+3: * (`export type Dic = typeof es`) — cualquier clave que falte o sobre en
+6: * SIN "as const": los literales widenan a `string` al inferir `Dic`.
+7: * Con "as const", en.ts tendría que repetir literalmente cada frase española
+10:export const es = {
+124:export type Dic = typeof es;
+EXIT=0
+
+$ grep -n 'export const en\|Dic' "$SRC/i18n/en.ts"
+2: * Diccionario inglés. Tipado contra el shape del español:
+3: * `export const en: Dic` garantiza claves idénticas a `es.ts` — cualquier
+6: * Terminología fijada por spec §6 (Home/About/Projects/Skills/Contact,
+10:import type { Dic } from "./es";
+12:export const en: Dic = {
+EXIT=0
+
+$ cat "$SRC/i18n/useLang.ts"
+/**
+ * Hook consumidor del idioma. El throw es deliberado: convierte un olvido
+ * de wiring en error inmediato y visible, no en UI medio traducida.
+ */
+import { useContext } from "react";
+import { I18nContext } from "./context";
+import type { I18nContextValue } from "./types";
+
+export function useLang(): I18nContextValue {
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useLang debe usarse dentro de <I18nProvider>");
+  return ctx;
+}
+
+$ sed -n '55,90p' "$SRC/components/sections/Hero.tsx"
+const GAP_BEFORE = new Set([4, 6]);
+
+const TONE_CLASS: Record<Tone, string> = {
+  name: "font-bold text-white tracking-[-0.01em] text-[clamp(24px,5vw,38px)]",
+  role: "text-secondary",
+  dim: "text-on-surface-variant",
+  files: "text-tertiary",
+};
+
+/**
+ * Deriva los steps de la sesión del idioma activo. SIEMPRE dentro del render
+ * (HeroSession, useMemo): nunca a nivel de módulo — los steps dependen de
+ * `t`/`pick` (RF-12).
+ *
+ * `whoami`, `profile.name` y los slugs de proyecto no se traducen; los
+ * comandos con palabra española (`ls ~/proyectos`, `ver --proyectos`) y los
+ * CTAs salen del diccionario; tagline/location/title del profile se leen con
+ * `pick` (el fallback RNF-4 del helper cubre lados vacíos).
+ */
+function buildSteps(
+  t: Dic,
+  pick: I18nContextValue["pick"],
+  projectList: Project[],
+): TermStep[] {
+  return [
+    { kind: "cmd", text: "whoami" },
+    { kind: "out", tone: "name", text: profile.name },
+    { kind: "out", tone: "role", text: pick(profile.tagline) },
+    {
+      kind: "out",
+      tone: "dim",
+      text: `${pick(profile.location)} — ${pick(profile.title)}`,
+    },
+    { kind: "cmd", text: t.hero.cmdLs },
+    {
+      kind: "out",
+
+$ sed -n '100,110p' "$SRC/components/sections/Hero.tsx"
+  const [state, setState] = useState<{ step: number; chars: number }>(() =>
+    reduce ? { step: steps.length, chars: 0 } : { step: 0, chars: 0 },
+  );
+
+  useEffect(() => {
+    if (reduce) return;
+    if (state.step >= steps.length) return;
+    const current = steps[state.step];
+    let t: number;
+    if (current.kind === "cmd") {
+      if (state.chars < current.text.length) {
+
+$ sed -n '140,165p' "$SRC/components/sections/Hero.tsx"
+      <span className="text-on-surface-variant">:~$ </span>
+    </>
+  );
+}
+
+/** Wrapper: reinicia la sesión (remount) cuando cambia el idioma (RF-12/R-1). */
+export function Hero() {
+  const { lang } = useLang();
+  return <HeroSession key={lang} />;
+}
+
+function HeroSession() {
+  const { t, pick } = useLang();
+  const reduce = usePrefersReducedMotion();
+  const fadeUp = useFadeUp();
+  const stagger = useStaggerContainer(100);
+
+  // Steps del idioma activo, derivados EN EL RENDER (nunca a nivel de módulo).
+  const steps = useMemo(() => buildSteps(t, pick, projects), [t, pick]);
+  const { step, chars, done } = useTypewriter(steps, reduce);
+
+  const ghHandle = profile.socials.github ? handleFrom(profile.socials.github) : "";
+  const liHandle = profile.socials.linkedin
+    ? handleFrom(profile.socials.linkedin)
+    : "";
+
+$ sed -n '270,285p' "$SRC/components/sections/Hero.tsx"
+                )}
+                {profile.email && (
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="text-tertiary transition-colors hover:text-primary"
+                  >
+                    {profile.email}
+                  </a>
+                )}
+                {profile.location && <span>{pick(profile.location)}</span>}
+              </motion.div>
+            </motion.div>
+          )}
+        </TerminalWindow>
+      </div>
+    </section>
+
+$ sed -n '1,40p' "$SRC/data/profile.ts"
+/**
+ * Datos personales del portfolio.
+ *
+ * Los campos de contenido visible (`tagline`, `title`, `about`, `location`)
+ * son `Localized<T>`: `{ es, en }`. El resto (nombre, email, urls, CV) no
+ * son traducibles y quedan como strings planos.
+ *
+ * Si dejas un campo vacío (lado `es` o `en` a ""), los componentes que lo
+ * usen degradan al otro idioma (readLocalized, RNF-4) o se renderizan
+ * vacíos con placeholders neutros (no se muestran datos ficticios).
+ */
+import type { Localized } from "../i18n/types";
+
+export const profile = {
+  /** TODO: reemplazar con tu nombre. */
+  name: "Antonio Cuevas",
+  /** TODO: tagline corto (1 frase, ej: "Construyendo con propósito"). Sale en pill sobre el h1. */
+  tagline: { es: "Full-Stack Developer", en: "Full-Stack Developer" } satisfies Localized<string>,
+  /** TODO: subtítulo profesional bajo el h1 del Hero. Si vacío, no se muestra. */
+  title: {
+    es: "Construyendo soluciones escalables con código limpio y arquitectura robusta. Apasionado por la resolución de problemas complejos y el rendimiento web.",
+    en: "Building scalable solutions with clean code and robust architecture. Passionate about solving complex problems and web performance.",
+  } satisfies Localized<string>,
+  /** TODO: email de contacto (formato: tu@email.com). */
+  email: "antoniocuevaslopez@proton.me",
+  /** TODO: ubicación (ciudad, país) o déjala vacía. */
+  location: { es: "Sevilla, España", en: "Sevilla, Spain" } satisfies Localized<string>,
+  /** TODO: ruta a tu foto en /public/ (ej: "/avatar.jpg"). Si vacía, sale placeholder. */
+  avatar: "/avatar.png",
+  /** TODO: ruta al CV en /public/ (ej: "/cv.pdf"). Si no existe, el botón sale disabled. */
+  cvUrl: "/cv.pdf",
+  /** Descripción larga (2-3 frases) para el About. */
+  about: {
+    es: "Desarrollador Full Stack con conocimientos en desarrollo backend y frontend, diseño de APIs, bases de datos y despliegue de aplicaciones. Enfocado en crear soluciones limpias, funcionales y escalables, aprendiendo constantemente nuevas tecnologías y metodologías.",
+    en: "Full-Stack developer with knowledge of backend and frontend development, API design, databases and application deployment. Focused on creating clean, functional and scalable solutions, constantly learning new technologies and methodologies.",
+  } satisfies Localized<string>,
+  socials: {
+    /** TODO: URL completa de tu perfil (ej: "https://github.com/tu-user"). Vacío = no se muestra. */
+    github: "https://github.com/ProtonTony06",
+    /** TODO: URL completa de LinkedIn. Vacío = no se muestra. */
+
+$ sed -n '200,215p' "$SRC/components/ui/ProjectModal.tsx"
+
+              {/* Descripción corta */}
+              <p className="text-base text-on-surface-variant">
+                {pick(project.description)}
+              </p>
+
+              {/* Descripción larga */}
+              {project.longDescription && (
+                <>
+                  <hr className="my-6 border-outline-variant/40" />
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">
+                    {pick(project.longDescription)}
+                  </p>
+                </>
+              )}
+
+$ sed -n '55,68p' "$SRC/components/sections/Contact.tsx"
+                    {t.contact.infoLead}
+                  </p>
+                </div>
+                <SocialLinks variant="stacked" iconSize={18} />
+                {profile.location && (
+                  <p className="font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
+                    {pick(profile.location)}
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {/* Form */}
+            <motion.div
+
+$ sed -n '70,95p' "$SRC/components/layout/Header.tsx"
+                      className="absolute inset-x-4 -bottom-px h-0.5 rounded-full bg-primary"
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Acciones derecha */}
+          <div className="flex items-center gap-2">
+            <LangToggle />
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              aria-label={t.header.ariaOpenMenu}
+              aria-expanded={mobileOpen}
+              className="rounded-sm p-2 text-on-surface transition-colors hover:text-primary md:hidden"
+            >
+              <Menu size={20} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <MobileMenu
+        open={mobileOpen}
+
+$ sed -n '95,110p' "$SRC/components/layout/MobileMenu.tsx"
+            aria-label={t.header.ariaMainNav}
+          >
+            <div className="flex items-center justify-between border-b border-outline-variant/40 px-6 py-4">
+              <span className="font-mono text-xs text-on-surface-variant">
+                {t.header.menu}
+              </span>
+              <div className="flex items-center gap-1">
+                <LangToggle />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label={t.header.ariaCloseMenu}
+                  className="rounded-sm p-2 text-on-surface-variant transition-colors hover:text-primary"
+                >
+                  <X size={20} aria-hidden="true" />
+                </button>
+
+$ sed -n '180,210p' "$SRC/components/ui/ContactForm.tsx"
+
+            <div>
+              <label
+                htmlFor="contact-email"
+                className="mb-2 block font-mono text-xs text-on-surface-variant"
+              >
+                <span className="text-primary" aria-hidden="true">
+                  ~${" "}
+                </span>
+                {t.form.email}
+              </label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="tu@email.com"
+                value={values.email}
+                onChange={handleChange}
+                disabled={status === "loading"}
+                className="w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+              />
+            </div>
+
+$ grep -n 'messagePlaceholder\|emailPlaceholder\|placeholder' "$SRC/components/ui/ContactForm.tsx"
+173:                placeholder={t.form.namePlaceholder}
+177:                className="w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+197:                placeholder="tu@email.com"
+201:                className="w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+220:                placeholder={t.form.messagePlaceholder}
+224:                className="w-full resize-y rounded-sm border border-outline bg-surface-container-lowest px-4 py-3 text-base text-on-surface placeholder:text-on-surface-variant/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition disabled:opacity-50"
+
+$ wc -c "$SRC/i18n/es.ts" "$SRC/i18n/en.ts"
+4406 /home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts
+3191 /home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts
+7597 total
+
+$ cat "$SRC/i18n/I18nProvider.tsx"
+/**
+ * Provider del idioma: única fuente de verdad (RF-15).
+ * 1. Idioma inicial: localStorage `portfolio-lang` (try/catch) →
+ *    detección `navigator.language` /^en/ → "es" (RF-2/RF-3, ver context.ts).
+ * 2. UN efecto `[lang]` hace persistencia + sync de `<html lang>` (RF-4),
+ *    de modo que también el primer render sincroniza sin código extra.
+ * 3. `value` memoizado por idioma: `t`/`pick` solo cambian al cambiar lang.
+ */
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { I18nContext, LANG_STORAGE_KEY, readInitialLang } from "./context";
+import { readLocalized } from "./localize";
+import { en } from "./en";
+import { es } from "./es";
+import type { I18nContextValue, Lang } from "./types";
+
+/** Wrapper del árbol (única fuente de verdad del idioma, RF-15). */
+export function I18nProvider({ children }: { children: ReactNode }) {
+  // Initializer sin invocar: corre una vez, puro, compatible con StrictMode.
+  const [lang, setLangState] = useState<Lang>(readInitialLang);
+
+  // Persistencia + <html lang>: UN efecto, UNA fuente de verdad (RF-4, RF-15).
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {
+      // storage bloqueado: falla en silencio, sin errores en consola (CA-6)
+    }
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const value = useMemo<I18nContextValue>(() => {
+    const setLang = (next: Lang) => setLangState(next); // la escritura la hace el efecto
+    return {
+      lang,
+      setLang,
+      toggle: () => setLang(lang === "es" ? "en" : "es"),
+      t: lang === "es" ? es : en,
+      pick: (field) => readLocalized(field, lang),
+    };
+  }, [lang]);
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+$ cat "$SRC/i18n/context.ts"
+/**
+ * Context + persistencia/detección del idioma, en un fichero sin componentes.
+ * Separado de I18nProvider.tsx porque react-refresh/only-export-components
+ * exige que un fichero con componentes solo exporte componentes (el design
+ * §1.3 agrupaba esto en el Provider; la firma y semántica no cambian).
+ */
+import { createContext } from "react";
+import type { I18nContextValue, Lang } from "./types";
+
+export const I18nContext = createContext<I18nContextValue | null>(null);
+
+/** Clave de persistencia (plan, decisión 2; NO se traduce). */
+export const LANG_STORAGE_KEY = "portfolio-lang";
+
+/**
+ * Lee el idioma inicial de forma pura:
+ * localStorage → navigator.language /^en/ → "es" (fallback, RF-2).
+ * Toda lectura de storage va envuelta en try/catch (modo privado /
+ * storage bloqueado solo cuesta la detección, nunca un render roto, RNF-4).
+ */
+export function readInitialLang(): Lang {
+  try {
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored === "en" || stored === "es") return stored; // preferencia guardada GANA (RF-3)
+  } catch {
+    // storage bloqueado → sigue a detección
+  }
+  // /^en/ cubre en-US, en-GB, en… (CA-3). Resto de navegadores → "es".
+  if (navigator.language?.startsWith("en")) return "en";
+  return "es";
+}
+
+$ cat "$SRC/main.tsx"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles/globals.css";
+import App from "./App";
+import { I18nProvider } from "./i18n/I18nProvider";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <I18nProvider>
+      <App />
+    </I18nProvider>
+  </StrictMode>,
+);
+
+$ cat "$SRC/components/ui/LangToggle.tsx"
+import { useLang } from "../../i18n/useLang";
+
+interface LangToggleProps {
+  /** Espaciado/alineación del contexto (header bar vs drawer). Opcional. */
+  className?: string;
+}
+
+/**
+ * Toggle de idioma es/en estilo terminal (RF-14).
+ *
+ * Par de tokens `[es] [en]` en mono, con corchetes decorativos estilo prompt
+ * (aria-hidden). El token activo va en `text-primary` con borde
+ * `primary/60` (mismo vocabulario que la nav activa y el logo); el inactivo
+ * usa el patrón dim + hover de la nav. Sin banderas, sin switch, sin
+ * border-radius moderno: piel terminal intacta (RNF-3/R-5).
+ *
+ * A11y (RNF-1/CA-7): `role="group"` con aria-label "Cambiar idioma" y dos
+ * botones con `aria-pressed` + nombre accesible dinámico (siempre en el
+ * idioma activo, para no anunciar "Español" con la UI en inglés). Foco
+ * visible idéntico al patrón de ProjectModal.
+ */
+export function LangToggle({ className }: LangToggleProps) {
+  const { lang, setLang, t } = useLang();
+
+  return (
+    <div
+      role="group"
+      aria-label={t.common.langGroup}
+      className={`flex items-center gap-0.5 font-mono text-xs ${className ?? ""}`}
+    >
+      {(["es", "en"] as const).map((value) => (
+        <button
+          key={value}
+          type="button"
+          aria-pressed={lang === value}
+          aria-label={value === "es" ? t.common.langEs : t.common.langEn}
+          onClick={() => setLang(value)}
+          className={`rounded-sm px-1.5 py-1 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
+            lang === value
+              ? "border border-primary/60 text-primary"
+              : "border border-transparent text-on-surface-variant hover:text-primary"
+          }`}
+        >
+          {/* Par de corchetes estilo prompt, decorativos */}
+          <span aria-hidden="true" className="text-primary/70">
+            [
+          </span>
+          {value}
+          <span aria-hidden="true" className="text-primary/70">
+            ]
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+$ cat "$SRC/i18n/localize.ts"
+/**
+ * Selección de lado de un campo Localized. Lógica pura, sin React —
+ * reutilizable dentro de builders de datos y del shim del corte 2.
+ * `pick` del provider es exactamente esta función con el lang del context:
+ * una sola implementación del fallback, dos puntos de entrada.
+ */
+import type { Lang, Localized } from "./types";
+
+/**
+ * Devuelve el lado activo del campo; si va VACÍO (string "" o array []),
+ * degrada al otro idioma (RNF-4): nunca renderiza undefined/basura.
+ * `value.length === 0` sirve para string y para array a la vez.
+ */
+export function readLocalized<T extends string | readonly string[]>(
+  field: Localized<T>,
+  lang: Lang,
+): T {
+  const active = field[lang];
+  if (active.length > 0) return active;
+  return field[lang === "es" ? "en" : "es"] as T;
+}
+
+----------------------------------------------------------------
+QA-23 — BASELINE de bundle del commit anterior (HEAD~1 = 01c0247), construido
+en un git worktree TEMPORAL en /tmp (node_modules enlazado por symlink), para
+no tocar el árbol de trabajo del repo. Trabajo verificado intacto después
+(git status idéntico al inicial; worktree list limpia tras prune).
+
+$ git -C /home/acuelop369/Escritorio/Proyectos/portfolio worktree add --detach $TMP 88edd590~1 && ln -s <node_modules> "$TMP/portfolio/node_modules" && cd "$TMP/portfolio" && npm run build
+HEAD está ahora en 01c0247 feat(i18n): bilingüizar profile, projects y skills
+transforming...
+✓ 1962 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.99 kB │ gzip:   0.53 kB
+dist/assets/index-B9SirUsf.css   21.34 kB │ gzip:   4.90 kB
+dist/assets/index-nh2xiUgd.js   318.97 kB │ gzip: 101.00 kB
+✓ built in 2.56s
+EXIT_CODE=0
+
+$ git -C /home/acuelop369/Escritorio/Proyectos/portfolio worktree list  (tras limpieza)
+/home/acuelop369/Escritorio/Proyectos/portfolio 88edd59 [develop]
+
+$ git -C /home/acuelop369/Escritorio/Proyectos/portfolio status --porcelain  (tras limpieza; idéntico al inicial)
+?? .atl/context.md
+?? .atl/sdd/add-i18n/
+?? .atl/skill-registry.md
+
+================================================================
+G-1 — SALIDA COMPLETA VERBATIM (hits de acentuados con nº de línea e
+inspección posterior: los únicos hits NO-comentario fuera de whitelist son
+líneas de continuación de comentarios JSX/TSX, ver filtrado siguiente).
+[... la salida de este grep supera el tamaño de la consola y se conserva
+íntegra en un fichero de tool-result; se apunta su contenido verbatim a
+continuación ...]
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC" --include='*.ts' --include='*.tsx'  (salida completa, verbatim)
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC" --include='*.ts' --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx:10: * Layout raíz de la app.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx:19: * `scroll-pt-20` añade padding-top al hacer scroll a anchors, para que
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:5: * Footer como línea de estado de terminal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:7: * Una única fila mono dim: `{t.footer.statusLabel} online · {año} · antonio@portfolio`
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:8: * (+ enlaces sociales a la derecha). En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/App.tsx:9: * App raíz.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/App.tsx:11: * Monta el Layout con las 5 secciones del portfolio. Cada sección tiene
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:18: * Sección About.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:21: * 4 mini-cards de stack destacado a la derecha. En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:29:  // Como en build-time no podemos leer el filesystem, lo hacemos heurístico:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:31:  // manualmente si quiere desactivar el botón.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:94:              // Mapeamos cada "categoría" a un fragmento de skills para mostrar.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:95:              // Si no hay skills, mostramos el label genérico.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:19: * Drawer de navegación móvil (coherente con la estética terminal).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:21: * Se abre con animación lateral y se cierra con:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:23: * - Click en un link (que primero hace scroll a la sección)
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:27: * X a la derecha. Los labels de los ítems salen del diccionario mapeando
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:28: * el id de sección (`t.nav.*`); los anchors/ids no cambian (RF-13).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:35:  // Labels del diccionario por id de sección (el anchor "hero" → "Inicio").
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:54:  // Bloquear scroll del body cuando está abierto
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx:9: * Chip técnico de terminal: borde outline-variant, radius 2px, texto mono dim.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx:12: * Pensado para stack de proyectos, categorías, etiquetas técnicas.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:9: * Sección Skills.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:11: * Grid de 3 columnas en desktop. Cada card es una categoría
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:11: * Sección Projects.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:13: * Grid de 3 columnas en desktop, 2 en tablet, 1 en móvil.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:16: * El modal de detalle se monta a nivel de sección para que:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:18: * - el foco pueda volver al botón "Ver más información" que lo abrió.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx:12: * Encabezado de sección consistente en toda la app.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx:16: * - `description`: párrafo dim debajo.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:4:  /** Espaciado/alineación del contexto (header bar vs drawer). Opcional. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:14: * usa el patrón dim + hover de la nav. Sin banderas, sin switch, sin
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:18: * botones con `aria-pressed` + nombre accesible dinámico (siempre en el
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:19: * idioma activo, para no anunciar "Español" con la UI en inglés). Foco
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:20: * visible idéntico al patrón de ProjectModal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/GlassCard.tsx:15: * - Sin glass: ni blur ni inner light (en la estética terminal no hay vidrio).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:8:/** Ids de sección para scroll-spy y anchors (RF-13: los ids no cambian). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:17: * - Nav anchor links mono (oculta en móvil), labels del diccionario.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:4:  /** Texto de la barra de título (ej: "antonio@portfolio: ~ — bash"). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:10: * Cascarón de ventana de terminal (mockup .tA-win + chrome).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:12: * Componente puro: sin estado, sin animación, sin lógica de negocio.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:13: * Solo estructura visual: titlebar con los 3 puntos de tráfico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:15: * excepción estética documentada en design.md §7, no tokens) y un body
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:16: * donde el consumidor compone sus propias líneas (prompts, salidas…).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:18: * El body usa `min-w-0` + `whitespace-pre-wrap` en las líneas hijas para
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:19: * colapsar a una columna en móvil sin overflow horizontal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:10:  /** Abre el modal con más información. Si se omite, no se muestra el botón. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:18: * - Título estilo carpeta `minusculas/` en ámbar + descripción dim.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:20: * - Botón "Ver más información" (si se pasa `onOpen`).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:21: * - Iconos repo/demo y año.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:59:        {/* Título estilo carpeta (nombre en ámbar, "/" en dim) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:65:        {/* Descripción */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:86:        {/* Botón "Ver más información" (modal) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:89:        {/* Footer: iconos + año */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:10: * Plan gratis: 50 envíos/mes, suficiente para un portfolio personal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:33: * - Validación client-side mínima (campos required, mensaje min 10 chars).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:34: * - AnimatePresence para transición entre form y mensaje de éxito.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:35: * - Botón deshabilitado en loading para evitar doble submit.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:53:    // Validación mínima
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:93:          // respuesta no-JSON: mensaje genérico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:8: * Si dejas un campo vacío (lado `es` o `en` a ""), los componentes que lo
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:10: * vacíos con placeholders neutros (no se muestran datos ficticios).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:17:  /** TODO: tagline corto (1 frase, ej: "Construyendo con propósito"). Sale en pill sobre el h1. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:19:  /** TODO: subtítulo profesional bajo el h1 del Hero. Si vacío, no se muestra. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:21:    es: "Construyendo soluciones escalables con código limpio y arquitectura robusta. Apasionado por la resolución de problemas complejos y el rendimiento web.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:26:  /** TODO: ubicación (ciudad, país) o déjala vacía. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:27:  location: { es: "Sevilla, España", en: "Sevilla, Spain" } satisfies Localized<string>,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:28:  /** TODO: ruta a tu foto en /public/ (ej: "/avatar.jpg"). Si vacía, sale placeholder. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:30:  /** TODO: ruta al CV en /public/ (ej: "/cv.pdf"). Si no existe, el botón sale disabled. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:32:  /** Descripción larga (2-3 frases) para el About. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:34:    es: "Desarrollador Full Stack con conocimientos en desarrollo backend y frontend, diseño de APIs, bases de datos y despliegue de aplicaciones. Enfocado en crear soluciones limpias, funcionales y escalables, aprendiendo constantemente nuevas tecnologías y metodologías.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:38:    /** TODO: URL completa de tu perfil (ej: "https://github.com/tu-user"). Vacío = no se muestra. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:40:    /** TODO: URL completa de LinkedIn. Vacío = no se muestra. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:4: * Detecta qué sección está actualmente visible en el viewport.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:6: * Usa IntersectionObserver con un rootMargin que considera "activa" la sección
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:7: * cuya línea central cruza el centro de la pantalla. Devuelve el id de la
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:8: * sección visible; si hay varias, prioriza la de mayor ratio de intersección.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:11: * @returns El id de la sección activa (o el primero si nada coincide)
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/useScrollSpy.ts:36:        // Consideramos "activa" la sección que ocupa la franja central (40-55%)
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:19: * Patrón calcado de `MobileMenu`:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:22: * - Cierre por Escape, click en backdrop o botón X.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:23: * - Body scroll lock mientras está abierto.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:24: * - Devuelve el foco al elemento que lo abrió al cerrarse.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:27: * esas secciones se omiten sin dejar separadores huérfanos.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:42:  // (en la práctica hoy solo hay uno, pero deja la puerta abierta).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:51:    // Pequeño delay para esperar al mount antes de robar el foco al X.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:100:              propiedad `transform` durante la animación de scale, lo que
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:101:              machacaría el `-translate-x-1/2 -translate-y-1/2`. El scale y la
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:152:              {/* Imagen de portada: galería si hay, imageUrl como fallback.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:153:                  Como siempre hay al menos una, evitamos el placeholder vacío. */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:201:              {/* Descripción corta */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:206:              {/* Descripción larga */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:258:                // para cambiar el icono y el texto del botón.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:289: * Botón secundario "Ver más información" que se coloca dentro de `ProjectCard`.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:290: * Lo exportamos desde aquí para que viva junto al modal y mantener todo el
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/usePrefersReducedMotion.ts:8: * tener un punto único desde el que cambiar la implementación si más adelante
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/hooks/usePrefersReducedMotion.ts:9: * queremos cubrir más allá de lo que framer-motion detecta (p. ej. en CSS).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:5: * `features`, `note`) son `Localized<T>`: `{ es, en }`. Título, tags,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:6: * imágenes y URLs no son traducibles.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:18:  /** Descripción extendida (texto plano; saltos de línea con `\n`). Se muestra en el modal. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:32:      es: "Sistema de gestión de ligas de fútbol amateur: partidos en vivo, clasificación, estadísticas y roles por equipo. Backend con FastAPI + Supabase PostgreSQL y frontend React + TypeScript desplegado en Render.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:36:      es: "Aplicación full-stack pensada para que un grupo de amigos con su liga de fin de semana pueda organizarse sin recurrir a hojas de cálculo. Los capitanes crean su equipo, registran jugadores y cargan los resultados de cada jornada; el sistema recalcula la tabla en tiempo real y aplica las reglas de desempate acordadas (incluido fairplay).\n\nEl backend se apoya en FastAPI con SQLModel sobre Supabase Postgres para el modelo relacional y autenticación, y un canal en tiempo real vía Supabase Realtime para que los marcadores y eventos del partido se actualicen en todos los clientes conectados. El frontend está en React 18 + TypeScript con un sistema de diseño propio basado en Material Design 3, renderizado con Vite y desplegado en Render.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:41:        "Partidos en vivo con marcador y eventos actualizados en tiempo real vía Supabase Realtime",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:42:        "Clasificación automática con desempate configurable, incluido criterio de fairplay",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:44:        "Estadísticas individuales y de equipo (goles, asistencias, tarjetas, MVP por jornada)",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:45:        "Panel de administración para crear ligas, temporadas y gestionar jornadas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:46:        "Autenticación y RLS gestionados directamente en Supabase",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:70:      es: "Este es un proyecto del instituto, no terminado y con datos ficticios. La demo web está desplegada en Render y puede tardar unos segundos en arrancar.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:77:      es: "Gestor de contraseñas privado para Android: cifrado híbrido (Android Keystore + password derivado), biometría y base de datos cifrada con SQLCipher. Todo local, sin servidores externos.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:81:      es: "App Android nativa para gestionar credenciales de forma privada, sin depender de servicios en la nube. El modelo de seguridad se apoya en tres capas: Android Keystore para material criptográfico, una derivación de clave desde la master password del usuario, y SQLCipher para cifrar la base de datos en reposo. La autenticación se realiza con la master password y, opcionalmente, biometría.\n\nEl proyecto sigue MVVM + Clean Architecture, con una capa de dominio que expone los casos de uso (generar, buscar, filtrar por categoría, marcar favorito, auditar contraseñas débiles, obtener estadísticas de seguridad, exportar backup cifrado e importar CSV) y una capa de presentación en Jetpack Compose con ViewModels y StateFlow. La inyección de dependencias se gestiona con Hilt y se complementa con un widget de generador de contraseñas y auto-lock por inactividad.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:86:        "Cifrado híbrido: Android Keystore (RSA/AES wrap) + derivación de clave desde master password",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:87:        "Autenticación biométrica (huella/rostro) opcional sobre la master password",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:89:        "Generador de contraseñas con parámetros configurables y widget de acceso directo",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:90:        "Auditoría de contraseñas débiles con métricas de seguridad y estadísticas agregadas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:91:        "Categorías, búsqueda, favoritos y filtrado en la lista de credenciales",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:93:        "Auto-lock por inactividad y onboarding de configuración inicial",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:94:        "Cobertura de tests: cifrado, Keystore, DAOs, ViewModels e integración de cifrado híbrido",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:121:      es: "Proyecto del instituto, no totalmente terminado (MVP). App Android con captura de pantalla deshabilitada por seguridad. Las imágenes son mockups representativos.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:132:      es: "Plataforma propia para crear, compartir y recoger respuestas a formularios dinámicos sin tocar código. Cada formulario expone una URL pública (/f/[slug]) compartible sin autenticación, y un panel privado (/admin) protegido para gestionar el ciclo de vida del formulario.\n\nEl frontend está en Next.js 14 con App Router, server components y server actions; la autenticación usa NextAuth v5 con credenciales y bcrypt contra una tabla `admin_user` en Supabase. La base de datos (formularios, preguntas, respuestas) vive en Supabase Postgres con `service_role` server-only y el cliente público usa `anon` con políticas RLS. La validación usa Zod en cliente y servidor (defensa en profundidad) y los formularios se renderizan con react-hook-form.\n\nDesplegado en producción desde agosto de 2026 en dominio propio, con HTTPS, rate-limit por IP y por email en el login, y migración futura de autenticación a Supabase Auth una vez consolidado.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:137:        "Builder de formularios con preguntas de opción múltiple y texto libre, validación configurable y orden editable",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:138:        "Cada formulario expone una URL pública /f/[slug] compartible sin autenticación",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:141:        "Validación cliente con react-hook-form + Zod, replicada en servidor (defensa en profundidad)",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:142:        "Listado y detalle de respuestas por formulario con exportación CSV",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:144:        "Desplegado en producción con dominio propio y HTTPS",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/lib/animations.ts:7: * Si el usuario prefiere movimiento reducido, devolvemos variants vacíos para
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/lib/animations.ts:8: * que los elementos aparezcan sin animación (estado final directo). Si no,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/lib/animations.ts:11: * Inspirado en el DESIGN.md: animaciones técnicas, no decorativas.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:2: * Diccionario español. Fuente de verdad del shape del diccionario
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:4: * `en.ts` rompe el build, y el type-check garantiza shape idéntico.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:7: * Con "as const", en.ts tendría que repetir literalmente cada frase española
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:8: * para compilar; sin él, `en: Dic` solo exige la misma estructura.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:14:    about: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:22:    langEs: "Español",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:23:    langEn: "Inglés",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:27:    menu: "Menú",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:29:    ariaMainNav: "Navegación principal",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:30:    ariaOpenMenu: "Abrir menú de navegación",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:31:    ariaCloseMenu: "Cerrar menú",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:42:    eyebrow: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:43:    title: "Quién soy",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:45:    /** title del span disabled mientras el CV no está disponible. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:46:    cvComingSoon: "Próximamente",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:47:    /** Fila vacía cuando about va vacío en data/profile.ts. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:49:      "Aquí irá una descripción sobre ti. Edita data/profile.ts para añadirla.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:55:    description: "Una selección de mis trabajos más recientes.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:56:    emptyTitle: "Aún no hay proyectos para mostrar.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:57:    /** Fila vacía cuando `projects` va vacío en data/projects.ts (estado placeholder). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:58:    emptyHint: "Edita src/data/projects.ts para añadir el primero.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:59:    moreInfo: "Ver más información",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:61:    code: "Código",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:66:      code: (title: string) => `Ver código de ${title}`,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:74:    title: "Habilidades técnicas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:75:    /** Prefijo de la fila vacía; el `<code>data/skills.ts</code>.` sigue en JSX. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:76:    empty: "Añade tus tecnologías en",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:78:  /** Contact (sección). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:81:    title: "¿Hablamos?",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:83:      "¿Tienes un proyecto en mente? Escríbeme y te respondo pronto.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:84:    infoTitle: "Información de contacto",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:85:    /** Frase completa de la fila de info (diseño §2 traía solo la 2ª frase; ver apply-progress). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:87:      "Estoy disponible para proyectos freelance o colaboraciones. Escríbeme por el canal que prefieras.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:95:    messagePlaceholder: "Cuéntame sobre tu proyecto...",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:98:    successTitle: "¡Mensaje enviado!",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:99:    successBody: "Te responderé lo antes posible.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:103:    errSend: "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:108:  /** Footer (línea de estado). "online" queda igual en ambos idiomas. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:117:    region: (alt: string) => `Carrusel de imágenes de ${alt}`,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:7:   * - `inline`: iconos sueltos en línea (usado en Hero, con label opcional).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:13:  /** Tamaño del icono. Default 16. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:20: * data/profile.ts (los que están vacíos no aparecen).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:66:  // Si no hay nada configurado todavía, no renderizamos nada (silencio elegante).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:11: * Sección Contact.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:13: * Grid 2 columnas: info a la izquierda (descripción + email + socials),
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:14: * formulario a la derecha. En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:10: * Card individual de categoría de skills (estilo carpeta de terminal).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:12: * Cabecera: icono container primary-container/20 + ruta `~/{categoria}/` en ámbar.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:15: * Si la categoría no tiene items, muestra mensaje neutro.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:27:      {/* Título: ruta carpeta ~/{categoria}/ */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:2: * Contratos puros de i18n. Type-only: nada de runtime aquí.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:4: * Árbol de dependencias (acyclic):
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:19:  /** Idioma activo. Única fuente de verdad (localStorage + <html lang> derivan de él). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:6: * Categorías de skills técnicos.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:8: * `id` es la clave estable de la categoría (frontend|backend|tools): los
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:9: * consumidores hacen matching por él, nunca por el texto de `category`.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:11: * idénticos en ambos idiomas; "Herramientas"/"Tools"). Los items son strings
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:12: * con el nombre de la tecnología. Rellena los arrays vacíos con tus skills.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:30:    // TODO: añade tus tecnologías frontend (ej: "React", "TypeScript", "Tailwind CSS")
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:37:    // TODO: añade tus tecnologías backend (ej: "Node.js", "PostgreSQL", "Redis")
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/skills.ts:44:    // TODO: añade tus herramientas (ej: "Git", "Docker", "Figma")
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:2: * Provider del idioma: única fuente de verdad (RF-15).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:4: *    detección `navigator.language` /^en/ → "es" (RF-2/RF-3, ver context.ts).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:6: *    de modo que también el primer render sincroniza sin código extra.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:16:/** Wrapper del árbol (única fuente de verdad del idioma, RF-15). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:2: * Selección de lado de un campo Localized. Lógica pura, sin React —
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:4: * `pick` del provider es exactamente esta función con el lang del context:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:5: * una sola implementación del fallback, dos puntos de entrada.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:10: * Devuelve el lado activo del campo; si va VACÍO (string "" o array []),
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:2: * Context + persistencia/detección del idioma, en un fichero sin componentes.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:5: * §1.3 agrupaba esto en el Provider; la firma y semántica no cambian).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:12:/** Clave de persistencia (plan, decisión 2; NO se traduce). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:19: * storage bloqueado solo cuesta la detección, nunca un render roto, RNF-4).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:26:    // storage bloqueado → sigue a detección
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:13: * Sección Hero: sesión de terminal (Concepto A, mockup .tA).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:15: * Ventana única centrada (TerminalWindow) con líneas declarativas
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:21: * La sesión es un componente interior (`HeroSession`) montado con
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:23: * idioma derivados en el render, máquina de tecleo a cero, reveals desde
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:27: * estático visible (globals.css congela `.terminal-cursor`); el estado
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:37:/** Prompt `antonio@portfolio` derivado de profile.name (1er token, minúscula, sin acentos). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:44:/** Título de proyecto → carpeta `minusculas/`. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:49:/** Handle social desde la URL real de profile (último segmento). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:54:/** Índices de líneas con separación superior (los `<br>` del mockup). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:65: * Deriva los steps de la sesión del idioma activo. SIEMPRE dentro del render
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:66: * (HeroSession, useMemo): nunca a nivel de módulo — los steps dependen de
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:70: * comandos con palabra española (`ls ~/proyectos`, `ver --proyectos`) y los
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:72: * `pick` (el fallback RNF-4 del helper cubre lados vacíos).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:98:/** Máquina de tecleo mínima: avanza paso a paso por `steps` (por parámetro). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:111:        // 40-80ms por carácter, con jitter para que no suene robótico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:117:        // comando terminado → pequeño salto antes de revelar la salida
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:145:/** Wrapper: reinicia la sesión (remount) cuando cambia el idioma (RF-12/R-1). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:157:  // Steps del idioma activo, derivados EN EL RENDER (nunca a nivel de módulo).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:170:          {/* Líneas de la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:198:            // cmd: parcial mientras se teclea, completo cuando está revelado
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:214:          {/* CTAs + meta line: aparecen al terminar la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:9:  /** Texto alternativo base. Se le añade " (N/total)" automáticamente. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:16: * Carrusel de imágenes con scroll-snap CSS, sin librerías externas.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:18: * - Swipe táctil nativo (gracias a `scroll-snap-type` y `scroll-snap-align`).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:22: * - Respeta `prefers-reduced-motion` (sin transición de fade al cambiar).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:23: * - Estado único: `index` derivado de la posición de scroll del contenedor
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:27: * Por diseño, si solo hay 1 imagen, las flechas y los dots se ocultan
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:28: * automáticamente.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:39:  // Sincroniza `index` con la posición real del scroll del track.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:67:  // efecto mueve el scroll del track al hijo correspondiente. Es el único
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:84:      // Clamp en lugar de wrap: si los botones están ocultos en los extremos,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:121:          // Los SVG (mockups de móvil, diagramas) se renderizan con
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:150:          en la última. Así el usuario no puede ir más allá de los extremos. */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:2: * Diccionario inglés. Tipado contra el shape del español:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:3: * `export const en: Dic` garantiza claves idénticas a `es.ts` — cualquier
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:6: * Terminología fijada por spec §6 (Home/About/Projects/Skills/Contact,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:8: * Tono técnico y directo; primera persona donde el español la usa.
+EXIT=0
+
+
+$ grep -vP ':\s*(//|\*|/\*)' <salida G-1> | grep -v '^\\$ grep\|EXIT=' | grep -P '[áéíóúñ¿¡]'   [COMANDO AUXILIAR de inspección: hits de G-1 que NO empiezan como comentario]
+$ grep -vP ':\s*(//|\*|/\*)' <salida-G-1> | grep -v '^\$ grep|EXIT=' | grep -P '[áéíóúñ¿¡]'   [COMANDO AUXILIAR: hits de G-1 que no empiezan por marcador de comentario]
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC" --include='*.ts' --include='*.tsx'
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:59:        {/* Título estilo carpeta (nombre en ámbar, "/" en dim) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:65:        {/* Descripción */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:86:        {/* Botón "Ver más información" (modal) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:89:        {/* Footer: iconos + año */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:21:    es: "Construyendo soluciones escalables con código limpio y arquitectura robusta. Apasionado por la resolución de problemas complejos y el rendimiento web.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:27:  location: { es: "Sevilla, España", en: "Sevilla, Spain" } satisfies Localized<string>,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/profile.ts:34:    es: "Desarrollador Full Stack con conocimientos en desarrollo backend y frontend, diseño de APIs, bases de datos y despliegue de aplicaciones. Enfocado en crear soluciones limpias, funcionales y escalables, aprendiendo constantemente nuevas tecnologías y metodologías.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:100:              propiedad `transform` durante la animación de scale, lo que
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:101:              machacaría el `-translate-x-1/2 -translate-y-1/2`. El scale y la
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:152:              {/* Imagen de portada: galería si hay, imageUrl como fallback.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:153:                  Como siempre hay al menos una, evitamos el placeholder vacío. */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:201:              {/* Descripción corta */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:206:              {/* Descripción larga */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:32:      es: "Sistema de gestión de ligas de fútbol amateur: partidos en vivo, clasificación, estadísticas y roles por equipo. Backend con FastAPI + Supabase PostgreSQL y frontend React + TypeScript desplegado en Render.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:36:      es: "Aplicación full-stack pensada para que un grupo de amigos con su liga de fin de semana pueda organizarse sin recurrir a hojas de cálculo. Los capitanes crean su equipo, registran jugadores y cargan los resultados de cada jornada; el sistema recalcula la tabla en tiempo real y aplica las reglas de desempate acordadas (incluido fairplay).\n\nEl backend se apoya en FastAPI con SQLModel sobre Supabase Postgres para el modelo relacional y autenticación, y un canal en tiempo real vía Supabase Realtime para que los marcadores y eventos del partido se actualicen en todos los clientes conectados. El frontend está en React 18 + TypeScript con un sistema de diseño propio basado en Material Design 3, renderizado con Vite y desplegado en Render.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:41:        "Partidos en vivo con marcador y eventos actualizados en tiempo real vía Supabase Realtime",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:42:        "Clasificación automática con desempate configurable, incluido criterio de fairplay",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:44:        "Estadísticas individuales y de equipo (goles, asistencias, tarjetas, MVP por jornada)",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:45:        "Panel de administración para crear ligas, temporadas y gestionar jornadas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:46:        "Autenticación y RLS gestionados directamente en Supabase",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:70:      es: "Este es un proyecto del instituto, no terminado y con datos ficticios. La demo web está desplegada en Render y puede tardar unos segundos en arrancar.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:77:      es: "Gestor de contraseñas privado para Android: cifrado híbrido (Android Keystore + password derivado), biometría y base de datos cifrada con SQLCipher. Todo local, sin servidores externos.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:81:      es: "App Android nativa para gestionar credenciales de forma privada, sin depender de servicios en la nube. El modelo de seguridad se apoya en tres capas: Android Keystore para material criptográfico, una derivación de clave desde la master password del usuario, y SQLCipher para cifrar la base de datos en reposo. La autenticación se realiza con la master password y, opcionalmente, biometría.\n\nEl proyecto sigue MVVM + Clean Architecture, con una capa de dominio que expone los casos de uso (generar, buscar, filtrar por categoría, marcar favorito, auditar contraseñas débiles, obtener estadísticas de seguridad, exportar backup cifrado e importar CSV) y una capa de presentación en Jetpack Compose con ViewModels y StateFlow. La inyección de dependencias se gestiona con Hilt y se complementa con un widget de generador de contraseñas y auto-lock por inactividad.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:86:        "Cifrado híbrido: Android Keystore (RSA/AES wrap) + derivación de clave desde master password",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:87:        "Autenticación biométrica (huella/rostro) opcional sobre la master password",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:89:        "Generador de contraseñas con parámetros configurables y widget de acceso directo",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:90:        "Auditoría de contraseñas débiles con métricas de seguridad y estadísticas agregadas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:91:        "Categorías, búsqueda, favoritos y filtrado en la lista de credenciales",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:93:        "Auto-lock por inactividad y onboarding de configuración inicial",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:94:        "Cobertura de tests: cifrado, Keystore, DAOs, ViewModels e integración de cifrado híbrido",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:121:      es: "Proyecto del instituto, no totalmente terminado (MVP). App Android con captura de pantalla deshabilitada por seguridad. Las imágenes son mockups representativos.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:132:      es: "Plataforma propia para crear, compartir y recoger respuestas a formularios dinámicos sin tocar código. Cada formulario expone una URL pública (/f/[slug]) compartible sin autenticación, y un panel privado (/admin) protegido para gestionar el ciclo de vida del formulario.\n\nEl frontend está en Next.js 14 con App Router, server components y server actions; la autenticación usa NextAuth v5 con credenciales y bcrypt contra una tabla `admin_user` en Supabase. La base de datos (formularios, preguntas, respuestas) vive en Supabase Postgres con `service_role` server-only y el cliente público usa `anon` con políticas RLS. La validación usa Zod en cliente y servidor (defensa en profundidad) y los formularios se renderizan con react-hook-form.\n\nDesplegado en producción desde agosto de 2026 en dominio propio, con HTTPS, rate-limit por IP y por email en el login, y migración futura de autenticación a Supabase Auth una vez consolidado.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:137:        "Builder de formularios con preguntas de opción múltiple y texto libre, validación configurable y orden editable",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:138:        "Cada formulario expone una URL pública /f/[slug] compartible sin autenticación",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:141:        "Validación cliente con react-hook-form + Zod, replicada en servidor (defensa en profundidad)",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:142:        "Listado y detalle de respuestas por formulario con exportación CSV",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/data/projects.ts:144:        "Desplegado en producción con dominio propio y HTTPS",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:14:    about: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:22:    langEs: "Español",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:23:    langEn: "Inglés",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:27:    menu: "Menú",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:29:    ariaMainNav: "Navegación principal",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:30:    ariaOpenMenu: "Abrir menú de navegación",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:31:    ariaCloseMenu: "Cerrar menú",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:42:    eyebrow: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:43:    title: "Quién soy",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:46:    cvComingSoon: "Próximamente",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:49:      "Aquí irá una descripción sobre ti. Edita data/profile.ts para añadirla.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:55:    description: "Una selección de mis trabajos más recientes.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:56:    emptyTitle: "Aún no hay proyectos para mostrar.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:58:    emptyHint: "Edita src/data/projects.ts para añadir el primero.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:59:    moreInfo: "Ver más información",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:61:    code: "Código",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:66:      code: (title: string) => `Ver código de ${title}`,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:74:    title: "Habilidades técnicas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:76:    empty: "Añade tus tecnologías en",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:81:    title: "¿Hablamos?",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:83:      "¿Tienes un proyecto en mente? Escríbeme y te respondo pronto.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:84:    infoTitle: "Información de contacto",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:87:      "Estoy disponible para proyectos freelance o colaboraciones. Escríbeme por el canal que prefieras.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:95:    messagePlaceholder: "Cuéntame sobre tu proyecto...",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:98:    successTitle: "¡Mensaje enviado!",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:99:    successBody: "Te responderé lo antes posible.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:103:    errSend: "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:117:    region: (alt: string) => `Carrusel de imágenes de ${alt}`,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:27:      {/* Título: ruta carpeta ~/{categoria}/ */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:170:          {/* Líneas de la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:214:          {/* CTAs + meta line: aparecen al terminar la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:150:          en la última. Así el usuario no puede ir más allá de los extremos. */}
+NON_COMMENT_LINES_END EXIT=0
+
+CONCLUSIÓN de la inspección G-1 (ver sed de contexto más arriba):
+- ProjectCard.tsx:59,65,86,89 / SkillCard.tsx:27 / Hero.tsx:170,214 / ProjectModal.tsx:152-153,201,206 → comentarios JSX {/* ... */}.
+- ProjectModal.tsx:100-101 y Carousel.tsx:150 → líneas de CONTINUACIÓN de comentarios JSX (contexto verbatim en sed 93-105 / 145-152).
+- src/data/profile.ts y src/data/projects.ts → lados `es:` localizados, dentro de la whitelist del plan.
+- src/i18n/es.ts → diccionario español, whitelist del plan.
+- src/i18n/en.ts:2,3,6,8 → comentarios de cabecera del diccionario inglés (comentarios).
+- Resto de ficheros del G-1 -l (Header, Layout, App, About, MobileMenu, Skills, SectionTitle, I18nProvider, LangToggle, GlassCard, ContactForm, Contact, usePrefersReducedMotion, Projects, Footer, animations, Pill, context, TerminalWindow, useScrollSpy, SocialLinks, types, localize) → todos sus hits empiezan por marcador de comentario (//, *, /*) según el filtrado anterior.
+→ QA-17 (G-1): PASS — whitelist + comentarios; ningún literal español renderizable fuera de whitelist.
+
+================================================================
+================================================================
+CICLO QA #2 — re-ejecución tras la corrección de QA-24
+commit bajo test: 5a91b88449a1bc051f1ed82d1ac4d5c2d01819b2 (rama develop)
+commit: 5a91b88 fix(i18n): placeholder de email del formulario vía diccionario
+fecha: 2026-10-22
+Re-ejecutado: build, lint, QA-24 (grep placeholder), QA-17 G-2, QA-20,
+QA-17 G-1 acotado a src/components + src/i18n (es.ts excluida por whitelist;
+data/*.ts no tocados, validados en pasada 1). El resto de casos estáticos se
+HIEREDEN de la pasada 1 (ver bloques anteriores de este mismo log).
+================================================================
+
+$ git log -1 --format=%H
+5a91b88449a1bc051f1ed82d1ac4d5c2d01819b2
+
+$ git log -1 --oneline
+5a91b88 fix(i18n): placeholder de email del formulario vía diccionario
+
+$ npm run build 2>&1; echo "EXIT_CODE=$?"
+> portfolio@0.0.0 build
+> tsc -b && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1964 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.99 kB │ gzip:   0.53 kB
+dist/assets/index-CJk3hVxI.css   21.35 kB │ gzip:   4.90 kB
+dist/assets/index-DkvaFQ82.js   320.12 kB │ gzip: 101.48 kB
+✓ built in 2.64s
+EXIT_CODE=0
+
+$ npm run lint 2>&1; echo "EXIT_CODE=$?"
+> portfolio@0.0.0 lint
+> eslint .
+
+EXIT_CODE=0
+
+$ grep -rnE 'placeholder="[^{]' "$SRC" --include='*.tsx'   [QA-24 — esperado 0 hits]
+EXIT=1
+
+$ grep -rniE '"(ver proyectos|contactar|enviar|nombre|mensaje|estado:|Habilidades|Sobre mí|próximamente)' "$SRC" --include='*.ts' --include='*.tsx'   [QA-17 G-2]
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:14:    about: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:16:    skills: "Habilidades",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:37:    ctaProjects: "ver proyectos",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:38:    ctaContact: "contactar",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:42:    eyebrow: "Sobre mí",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:46:    cvComingSoon: "Próximamente",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:74:    title: "Habilidades técnicas",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:91:    name: "Nombre",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:93:    message: "Mensaje",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:97:    submit: "Enviar mensaje",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:101:    sendAnother: "Enviar otro",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:111:    statusLabel: "estado:",
+EXIT=0
+
+$ grep -rnE 'readLocalized\(([^,]+),\s*"es"' "$SRC" --include='*.ts' --include='*.tsx'   [QA-20 — esperado 0]
+EXIT=1
+
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC/components" --include='*.ts' --include='*.tsx'   [QA-17 G-1 acotado a src/components]
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:5: * Footer como línea de estado de terminal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:7: * Una única fila mono dim: `{t.footer.statusLabel} online · {año} · antonio@portfolio`
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Footer.tsx:8: * (+ enlaces sociales a la derecha). En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx:10: * Layout raíz de la app.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Layout.tsx:19: * `scroll-pt-20` añade padding-top al hacer scroll a anchors, para que
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:11: * Sección Contact.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:13: * Grid 2 columnas: info a la izquierda (descripción + email + socials),
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Contact.tsx:14: * formulario a la derecha. En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:8:/** Ids de sección para scroll-spy y anchors (RF-13: los ids no cambian). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/Header.tsx:17: * - Nav anchor links mono (oculta en móvil), labels del diccionario.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx:9: * Chip técnico de terminal: borde outline-variant, radius 2px, texto mono dim.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Pill.tsx:12: * Pensado para stack de proyectos, categorías, etiquetas técnicas.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:18: * Sección About.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:21: * 4 mini-cards de stack destacado a la derecha. En móvil se apila.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:29:  // Como en build-time no podemos leer el filesystem, lo hacemos heurístico:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:31:  // manualmente si quiere desactivar el botón.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:94:              // Mapeamos cada "categoría" a un fragmento de skills para mostrar.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/About.tsx:95:              // Si no hay skills, mostramos el label genérico.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:11: * Sección Projects.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:13: * Grid de 3 columnas en desktop, 2 en tablet, 1 en móvil.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:16: * El modal de detalle se monta a nivel de sección para que:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Projects.tsx:18: * - el foco pueda volver al botón "Ver más información" que lo abrió.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:19: * Drawer de navegación móvil (coherente con la estética terminal).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:21: * Se abre con animación lateral y se cierra con:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:23: * - Click en un link (que primero hace scroll a la sección)
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:27: * X a la derecha. Los labels de los ítems salen del diccionario mapeando
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:28: * el id de sección (`t.nav.*`); los anchors/ids no cambian (RF-13).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:35:  // Labels del diccionario por id de sección (el anchor "hero" → "Inicio").
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/layout/MobileMenu.tsx:54:  // Bloquear scroll del body cuando está abierto
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:7:   * - `inline`: iconos sueltos en línea (usado en Hero, con label opcional).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:13:  /** Tamaño del icono. Default 16. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:20: * data/profile.ts (los que están vacíos no aparecen).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SocialLinks.tsx:66:  // Si no hay nada configurado todavía, no renderizamos nada (silencio elegante).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:19: * Patrón calcado de `MobileMenu`:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:22: * - Cierre por Escape, click en backdrop o botón X.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:23: * - Body scroll lock mientras está abierto.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:24: * - Devuelve el foco al elemento que lo abrió al cerrarse.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:27: * esas secciones se omiten sin dejar separadores huérfanos.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:42:  // (en la práctica hoy solo hay uno, pero deja la puerta abierta).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:51:    // Pequeño delay para esperar al mount antes de robar el foco al X.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:100:              propiedad `transform` durante la animación de scale, lo que
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:101:              machacaría el `-translate-x-1/2 -translate-y-1/2`. El scale y la
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:152:              {/* Imagen de portada: galería si hay, imageUrl como fallback.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:153:                  Como siempre hay al menos una, evitamos el placeholder vacío. */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:201:              {/* Descripción corta */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:206:              {/* Descripción larga */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:258:                // para cambiar el icono y el texto del botón.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:289: * Botón secundario "Ver más información" que se coloca dentro de `ProjectCard`.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectModal.tsx:290: * Lo exportamos desde aquí para que viva junto al modal y mantener todo el
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:4:  /** Texto de la barra de título (ej: "antonio@portfolio: ~ — bash"). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:10: * Cascarón de ventana de terminal (mockup .tA-win + chrome).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:12: * Componente puro: sin estado, sin animación, sin lógica de negocio.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:13: * Solo estructura visual: titlebar con los 3 puntos de tráfico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:15: * excepción estética documentada en design.md §7, no tokens) y un body
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:16: * donde el consumidor compone sus propias líneas (prompts, salidas…).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:18: * El body usa `min-w-0` + `whitespace-pre-wrap` en las líneas hijas para
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/TerminalWindow.tsx:19: * colapsar a una columna en móvil sin overflow horizontal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:9: * Sección Skills.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Skills.tsx:11: * Grid de 3 columnas en desktop. Cada card es una categoría
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:13: * Sección Hero: sesión de terminal (Concepto A, mockup .tA).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:15: * Ventana única centrada (TerminalWindow) con líneas declarativas
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:21: * La sesión es un componente interior (`HeroSession`) montado con
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:23: * idioma derivados en el render, máquina de tecleo a cero, reveals desde
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:27: * estático visible (globals.css congela `.terminal-cursor`); el estado
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:37:/** Prompt `antonio@portfolio` derivado de profile.name (1er token, minúscula, sin acentos). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:44:/** Título de proyecto → carpeta `minusculas/`. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:49:/** Handle social desde la URL real de profile (último segmento). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:54:/** Índices de líneas con separación superior (los `<br>` del mockup). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:65: * Deriva los steps de la sesión del idioma activo. SIEMPRE dentro del render
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:66: * (HeroSession, useMemo): nunca a nivel de módulo — los steps dependen de
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:70: * comandos con palabra española (`ls ~/proyectos`, `ver --proyectos`) y los
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:72: * `pick` (el fallback RNF-4 del helper cubre lados vacíos).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:98:/** Máquina de tecleo mínima: avanza paso a paso por `steps` (por parámetro). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:111:        // 40-80ms por carácter, con jitter para que no suene robótico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:117:        // comando terminado → pequeño salto antes de revelar la salida
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:145:/** Wrapper: reinicia la sesión (remount) cuando cambia el idioma (RF-12/R-1). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:157:  // Steps del idioma activo, derivados EN EL RENDER (nunca a nivel de módulo).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:170:          {/* Líneas de la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:198:            // cmd: parcial mientras se teclea, completo cuando está revelado
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/sections/Hero.tsx:214:          {/* CTAs + meta line: aparecen al terminar la sesión */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx:12: * Encabezado de sección consistente en toda la app.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SectionTitle.tsx:16: * - `description`: párrafo dim debajo.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:10: * Plan gratis: 50 envíos/mes, suficiente para un portfolio personal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:33: * - Validación client-side mínima (campos required, mensaje min 10 chars).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:34: * - AnimatePresence para transición entre form y mensaje de éxito.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:35: * - Botón deshabilitado en loading para evitar doble submit.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:53:    // Validación mínima
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:93:          // respuesta no-JSON: mensaje genérico
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/GlassCard.tsx:15: * - Sin glass: ni blur ni inner light (en la estética terminal no hay vidrio).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:4:  /** Espaciado/alineación del contexto (header bar vs drawer). Opcional. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:14: * usa el patrón dim + hover de la nav. Sin banderas, sin switch, sin
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:18: * botones con `aria-pressed` + nombre accesible dinámico (siempre en el
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:19: * idioma activo, para no anunciar "Español" con la UI en inglés). Foco
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/LangToggle.tsx:20: * visible idéntico al patrón de ProjectModal.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:10: * Card individual de categoría de skills (estilo carpeta de terminal).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:12: * Cabecera: icono container primary-container/20 + ruta `~/{categoria}/` en ámbar.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:15: * Si la categoría no tiene items, muestra mensaje neutro.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/SkillCard.tsx:27:      {/* Título: ruta carpeta ~/{categoria}/ */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:9:  /** Texto alternativo base. Se le añade " (N/total)" automáticamente. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:16: * Carrusel de imágenes con scroll-snap CSS, sin librerías externas.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:18: * - Swipe táctil nativo (gracias a `scroll-snap-type` y `scroll-snap-align`).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:22: * - Respeta `prefers-reduced-motion` (sin transición de fade al cambiar).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:23: * - Estado único: `index` derivado de la posición de scroll del contenedor
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:27: * Por diseño, si solo hay 1 imagen, las flechas y los dots se ocultan
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:28: * automáticamente.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:39:  // Sincroniza `index` con la posición real del scroll del track.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:67:  // efecto mueve el scroll del track al hijo correspondiente. Es el único
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:84:      // Clamp en lugar de wrap: si los botones están ocultos en los extremos,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:121:          // Los SVG (mockups de móvil, diagramas) se renderizan con
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/Carousel.tsx:150:          en la última. Así el usuario no puede ir más allá de los extremos. */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:10:  /** Abre el modal con más información. Si se omite, no se muestra el botón. */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:18: * - Título estilo carpeta `minusculas/` en ámbar + descripción dim.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:20: * - Botón "Ver más información" (si se pasa `onOpen`).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:21: * - Iconos repo/demo y año.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:59:        {/* Título estilo carpeta (nombre en ámbar, "/" en dim) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:65:        {/* Descripción */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:86:        {/* Botón "Ver más información" (modal) */}
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ProjectCard.tsx:89:        {/* Footer: iconos + año */}
+EXIT_COMPONENTS=0
+
+$ grep -rniP '[áéíóúñ¿¡]' "$SRC/i18n" --include='*.ts' --include='*.tsx' --exclude='es.ts'   [QA-17 G-1 acotado a src/i18n, es.ts EXCLUIDA por whitelist]
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:2: * Provider del idioma: única fuente de verdad (RF-15).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:4: *    detección `navigator.language` /^en/ → "es" (RF-2/RF-3, ver context.ts).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:6: *    de modo que también el primer render sincroniza sin código extra.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/I18nProvider.tsx:16:/** Wrapper del árbol (única fuente de verdad del idioma, RF-15). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:2: * Selección de lado de un campo Localized. Lógica pura, sin React —
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:4: * `pick` del provider es exactamente esta función con el lang del context:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:5: * una sola implementación del fallback, dos puntos de entrada.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/localize.ts:10: * Devuelve el lado activo del campo; si va VACÍO (string "" o array []),
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:2: * Context + persistencia/detección del idioma, en un fichero sin componentes.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:5: * §1.3 agrupaba esto en el Provider; la firma y semántica no cambian).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:12:/** Clave de persistencia (plan, decisión 2; NO se traduce). */
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:19: * storage bloqueado solo cuesta la detección, nunca un render roto, RNF-4).
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/context.ts:26:    // storage bloqueado → sigue a detección
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:2: * Diccionario inglés. Tipado contra el shape del español:
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:3: * `export const en: Dic` garantiza claves idénticas a `es.ts` — cualquier
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:6: * Terminología fijada por spec §6 (Home/About/Projects/Skills/Contact,
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:8: * Tono técnico y directo; primera persona donde el español la usa.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:2: * Contratos puros de i18n. Type-only: nada de runtime aquí.
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:4: * Árbol de dependencias (acyclic):
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/types.ts:19:  /** Idioma activo. Única fuente de verdad (localStorage + <html lang> derivan de él). */
+EXIT_I18N_ESCLUIDA=0
+
+$ grep -n 'emailPlaceholder' "$SRC/i18n/es.ts" "$SRC/i18n/en.ts" "$SRC/components/ui/ContactForm.tsx"
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/es.ts:95:    emailPlaceholder: "you@example.com",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/i18n/en.ts:83:    emailPlaceholder: "you@example.com",
+/home/acuelop369/Escritorio/Proyectos/portfolio/portfolio/src/components/ui/ContactForm.tsx:197:                placeholder={t.form.emailPlaceholder}
+EXIT=0
+
+CONCLUSIÓN del ciclo #2:
+- QA-24: 0 hits de placeholder inline; la corrección usa el diccionario en AMBOS lados (es.ts:95 y en.ts:83 con "you@example.com", ContactForm:197 placeholder={t.form.emailPlaceholder}) → PASS.
+- QA-17 G-2: 12 hits, todos en src/i18n/es.ts (whitelist) → PASS.
+- QA-20: 0 hits (deuda shim = 0) → PASS.
+- QA-17 G-1 acotado: todos los hits de src/components y de src/i18n (es.ts excluida) empiezan por marcador de comentario (//, *, /**...*/) o son comentarios JSX {...*}, incluidas las continuaciones conocidas ProjectModal:100-101 y Carousel:150 → PASS.
+- Es la corrección commit 5a91b88: bundle 320.12 kB js (pasada 1: 320.04 kB; delta +0.08 kB por las dos claves `emailPlaceholder` nuevas).
