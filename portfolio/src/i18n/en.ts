@@ -80,6 +80,7 @@ export const en: Dic = {
     email: "Email",
     message: "Message",
     namePlaceholder: "Your name",
+    emailPlaceholder: "you@example.com",
     messagePlaceholder: "Tell me about your project...",
     submit: "Send message",
     sending: "Sending…",

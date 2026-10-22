@@ -92,6 +92,7 @@ export const es = {
     email: "Email",
     message: "Mensaje",
     namePlaceholder: "Tu nombre",
+    emailPlaceholder: "you@example.com",
     messagePlaceholder: "Cuéntame sobre tu proyecto...",
     submit: "Enviar mensaje",
     sending: "Enviando…",

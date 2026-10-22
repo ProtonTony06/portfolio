@@ -194,7 +194,7 @@ export function ContactForm() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="tu@email.com"
+                placeholder={t.form.emailPlaceholder}
                 value={values.email}
                 onChange={handleChange}
                 disabled={status === "loading"}
