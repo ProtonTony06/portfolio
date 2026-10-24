@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { EASE_OUT, useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { profile } from "../../data/profile";
-import { projects } from "../../data/projects";
+import { projects, type Project } from "../../data/projects";
+import { useLang } from "../../i18n/useLang";
+import type { I18nContextValue } from "../../i18n/types";
+import type { Dic } from "../../i18n/es";
 import { TerminalWindow } from "../ui/TerminalWindow";
 
 /**
@@ -15,8 +18,14 @@ import { TerminalWindow } from "../ui/TerminalWindow";
  * salidas que aparecen de golpe al completar el comando. Al final, CTAs
  * estilo prompt (anclas #projects / #contact / cv.pdf) y meta line.
  *
+ * La sesión es un componente interior (`HeroSession`) montado con
+ * `key={lang}`: al cambiar de idioma se re-empeza TODO (steps del nuevo
+ * idioma derivados en el render, máquina de tecleo a cero, reveals desde
+ * initial) — no se mezclan idiomas en pantalla (RF-12/R-1).
+ *
  * Con prefers-reduced-motion: estado final directo (todo escrito) y cursor
- * estático visible (globals.css congela `.terminal-cursor`).
+ * estático visible (globals.css congela `.terminal-cursor`); el estado
+ * inicial del hook ya arranca en "todo escrito".
  */
 
 type TermStep =
@@ -52,31 +61,48 @@ const TONE_CLASS: Record<Tone, string> = {
   files: "text-tertiary",
 };
 
-const steps: TermStep[] = [
-  { kind: "cmd", text: "whoami" },
-  { kind: "out", tone: "name", text: profile.name },
-  { kind: "out", tone: "role", text: profile.tagline || "Full-Stack Developer" },
-  { kind: "out", tone: "dim", text: `${profile.location} — ${profile.title}` },
-  { kind: "cmd", text: "ls ~/proyectos" },
-  {
-    kind: "out",
-    tone: "files",
-    text: projects.map((p) => fileSlug(p.title)).join("   "),
-  },
-  { kind: "cmd", text: "ver --proyectos" },
-];
+/**
+ * Deriva los steps de la sesión del idioma activo. SIEMPRE dentro del render
+ * (HeroSession, useMemo): nunca a nivel de módulo — los steps dependen de
+ * `t`/`pick` (RF-12).
+ *
+ * `whoami`, `profile.name` y los slugs de proyecto no se traducen; los
+ * comandos con palabra española (`ls ~/proyectos`, `ver --proyectos`) y los
+ * CTAs salen del diccionario; tagline/location/title del profile se leen con
+ * `pick` (el fallback RNF-4 del helper cubre lados vacíos).
+ */
+function buildSteps(
+  t: Dic,
+  pick: I18nContextValue["pick"],
+  projectList: Project[],
+): TermStep[] {
+  return [
+    { kind: "cmd", text: "whoami" },
+    { kind: "out", tone: "name", text: profile.name },
+    { kind: "out", tone: "role", text: pick(profile.tagline) },
+    {
+      kind: "out",
+      tone: "dim",
+      text: `${pick(profile.location)} — ${pick(profile.title)}`,
+    },
+    { kind: "cmd", text: t.hero.cmdLs },
+    {
+      kind: "out",
+      tone: "files",
+      text: projectList.map((p) => fileSlug(p.title)).join("   "),
+    },
+    { kind: "cmd", text: t.hero.cmdShow },
+  ];
+}
 
-/** Máquina de tecleo mínima: avanza paso a paso por `steps`. */
-function useTypewriter(reduce: boolean) {
+/** Máquina de tecleo mínima: avanza paso a paso por `steps` (por parámetro). */
+function useTypewriter(steps: TermStep[], reduce: boolean) {
   const [state, setState] = useState<{ step: number; chars: number }>(() =>
     reduce ? { step: steps.length, chars: 0 } : { step: 0, chars: 0 },
   );
 
   useEffect(() => {
-    if (reduce) {
-      setState({ step: steps.length, chars: 0 });
-      return;
-    }
+    if (reduce) return;
     if (state.step >= steps.length) return;
     const current = steps[state.step];
     let t: number;
@@ -102,7 +128,7 @@ function useTypewriter(reduce: boolean) {
       );
     }
     return () => window.clearTimeout(t);
-  }, [state, reduce]);
+  }, [state, reduce, steps]);
 
   return { step: state.step, chars: state.chars, done: state.step >= steps.length };
 }
@@ -116,11 +142,21 @@ function Prompt() {
   );
 }
 
+/** Wrapper: reinicia la sesión (remount) cuando cambia el idioma (RF-12/R-1). */
 export function Hero() {
+  const { lang } = useLang();
+  return <HeroSession key={lang} />;
+}
+
+function HeroSession() {
+  const { t, pick } = useLang();
   const reduce = usePrefersReducedMotion();
-  const { step, chars, done } = useTypewriter(reduce);
   const fadeUp = useFadeUp();
   const stagger = useStaggerContainer(100);
+
+  // Steps del idioma activo, derivados EN EL RENDER (nunca a nivel de módulo).
+  const steps = useMemo(() => buildSteps(t, pick, projects), [t, pick]);
+  const { step, chars, done } = useTypewriter(steps, reduce);
 
   const ghHandle = profile.socials.github ? handleFrom(profile.socials.github) : "";
   const liHandle = profile.socials.linkedin
@@ -191,13 +227,13 @@ export function Hero() {
                   href="#projects"
                   className="rounded border border-primary bg-primary px-[18px] py-2 text-[12.5px] font-semibold text-on-primary transition-all hover:shadow-glow"
                 >
-                  ver proyectos
+                  {t.hero.ctaProjects}
                 </a>
                 <a
                   href="#contact"
                   className="rounded border border-primary px-[18px] py-2 text-[12.5px] font-semibold text-primary transition-colors hover:bg-primary-container/20"
                 >
-                  contactar
+                  {t.hero.ctaContact}
                 </a>
                 <a
                   href={profile.cvUrl}
@@ -240,7 +276,7 @@ export function Hero() {
                     {profile.email}
                   </a>
                 )}
-                {profile.location && <span>{profile.location}</span>}
+                {profile.location && <span>{pick(profile.location)}</span>}
               </motion.div>
             </motion.div>
           )}

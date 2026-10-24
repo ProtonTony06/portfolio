@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
+import { useLang } from "../../i18n/useLang";
 
 /**
  * Endpoint de Formspree para el formulario de contacto.
@@ -34,6 +35,7 @@ const INITIAL_VALUES: ContactFormValues = {
  * - Botón deshabilitado en loading para evitar doble submit.
  */
 export function ContactForm() {
+  const { t } = useLang();
   const [values, setValues] = useState<ContactFormValues>(INITIAL_VALUES);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,12 +53,12 @@ export function ContactForm() {
     // Validación mínima
     if (!values.name.trim() || !values.email.trim() || !values.message.trim()) {
       setStatus("error");
-      setErrorMessage("Todos los campos son obligatorios.");
+      setErrorMessage(t.form.errRequired);
       return;
     }
     if (values.message.trim().length < 10) {
       setStatus("error");
-      setErrorMessage("El mensaje debe tener al menos 10 caracteres.");
+      setErrorMessage(t.form.errMinLength);
       return;
     }
 
@@ -74,12 +76,12 @@ export function ContactForm() {
           name: values.name,
           email: values.email,
           message: values.message,
-          _subject: `Nuevo mensaje del portfolio de ${values.name}`,
+          _subject: t.form.emailSubject(values.name),
         }),
       });
 
       if (!response.ok) {
-        let message = "No se pudo enviar el mensaje. Inténtalo de nuevo.";
+        let message = t.form.errSend;
         try {
           const data = await response.json();
           if (data?.errors?.length) {
@@ -97,7 +99,7 @@ export function ContactForm() {
       setValues(INITIAL_VALUES);
     } catch (err) {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Error desconocido");
+      setErrorMessage(err instanceof Error ? err.message : t.form.errUnknown);
     }
   };
 
@@ -127,10 +129,10 @@ export function ContactForm() {
             />
             <div>
               <p className="text-lg font-semibold text-on-surface">
-                ¡Mensaje enviado!
+                {t.form.successTitle}
               </p>
               <p className="mt-1 text-sm text-on-surface-variant">
-                Te responderé lo antes posible.
+                {t.form.successBody}
               </p>
             </div>
             <button
@@ -138,7 +140,7 @@ export function ContactForm() {
               onClick={resetForm}
               className="font-mono text-xs font-medium uppercase tracking-widest text-primary transition-colors hover:text-secondary"
             >
-              Enviar otro
+              {t.form.sendAnother}
             </button>
           </motion.div>
         ) : (
@@ -160,7 +162,7 @@ export function ContactForm() {
                 <span className="text-primary" aria-hidden="true">
                   ~${" "}
                 </span>
-                Nombre
+                {t.form.name}
               </label>
               <input
                 id="contact-name"
@@ -168,7 +170,7 @@ export function ContactForm() {
                 type="text"
                 required
                 autoComplete="name"
-                placeholder="Tu nombre"
+                placeholder={t.form.namePlaceholder}
                 value={values.name}
                 onChange={handleChange}
                 disabled={status === "loading"}
@@ -184,7 +186,7 @@ export function ContactForm() {
                 <span className="text-primary" aria-hidden="true">
                   ~${" "}
                 </span>
-                Email
+                {t.form.email}
               </label>
               <input
                 id="contact-email"
@@ -192,7 +194,7 @@ export function ContactForm() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="tu@email.com"
+                placeholder={t.form.emailPlaceholder}
                 value={values.email}
                 onChange={handleChange}
                 disabled={status === "loading"}
@@ -208,14 +210,14 @@ export function ContactForm() {
                 <span className="text-primary" aria-hidden="true">
                   ~${" "}
                 </span>
-                Mensaje
+                {t.form.message}
               </label>
               <textarea
                 id="contact-message"
                 name="message"
                 required
                 rows={6}
-                placeholder="Cuéntame sobre tu proyecto..."
+                placeholder={t.form.messagePlaceholder}
                 value={values.message}
                 onChange={handleChange}
                 disabled={status === "loading"}
@@ -235,11 +237,11 @@ export function ContactForm() {
                     className="animate-spin"
                     aria-hidden="true"
                   />
-                  Enviando…
+                  {t.form.sending}
                 </>
               ) : (
                 <>
-                  Enviar mensaje
+                  {t.form.submit}
                   <Send
                     size={18}
                     aria-hidden="true"

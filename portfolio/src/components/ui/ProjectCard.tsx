@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Download, ExternalLink, Github, ImageOff } from "lucide-react";
 import type { Project } from "../../data/projects";
+import { useLang } from "../../i18n/useLang";
 import { GlassCard } from "./GlassCard";
 import { ProjectMoreInfoButton } from "./ProjectModal";
 
@@ -23,6 +24,7 @@ interface ProjectCardProps {
  * un enlace (repo o demo).
  */
 export function ProjectCard({ project, onOpen }: ProjectCardProps) {
+  const { t, pick } = useLang();
   const hasLink = Boolean(project.repoUrl || project.demoUrl);
 
   return (
@@ -62,7 +64,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
         {/* Descripción */}
         <p className="mt-2 line-clamp-3 text-[13px] text-on-surface-variant">
-          {project.description}
+          {pick(project.description)}
         </p>
 
         {/* Tags en texto plano, separados por " · " */}
@@ -92,7 +94,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Ver código de ${project.title}`}
+                aria-label={t.projects.aria.code(project.title)}
                 className="text-on-surface-variant transition-colors hover:text-primary"
               >
                 <Github size={18} strokeWidth={1.75} aria-hidden="true" />
@@ -100,7 +102,9 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
             )}
             {project.demoUrl && (() => {
               const isDownload = /\.(apk|zip|tar|gz|rar|exe|dmg)$/i.test(project.demoUrl);
-              const label = isDownload ? `Descargar APK de ${project.title}` : `Ver demo de ${project.title}`;
+              const label = isDownload
+                ? t.projects.aria.apk(project.title)
+                : t.projects.aria.demo(project.title);
               return (
                 <a
                   href={project.demoUrl}

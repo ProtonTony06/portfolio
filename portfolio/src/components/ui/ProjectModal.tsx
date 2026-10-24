@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Download, ExternalLink, Github, Info, X } from "lucide-react";
 import type { Project } from "../../data/projects";
+import { useLang } from "../../i18n/useLang";
 import { Carousel } from "./Carousel";
 import { Pill } from "./Pill";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
@@ -31,6 +32,7 @@ interface ProjectModalProps {
  * portal, desplazaba el modal a la esquina inferior).
  */
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
+  const { t, pick } = useLang();
   const reduceMotion = usePrefersReducedMotion();
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -72,6 +74,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const modalTransition = reduceMotion
     ? { duration: 0 }
     : { duration: 0.25, ease: "easeOut" as const };
+
+  // Features del idioma activo (project es nullable).
+  const features = project?.features ? pick(project.features) : undefined;
 
   return createPortal(
     <AnimatePresence>
@@ -135,7 +140,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 ref={closeButtonRef}
                 type="button"
                 onClick={onClose}
-                aria-label="Cerrar"
+                aria-label={t.projects.aria.close}
                 className="rounded-sm p-2 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <X size={20} aria-hidden="true" />
@@ -178,7 +183,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     className="mt-0.5 shrink-0 text-tertiary"
                     aria-hidden="true"
                   />
-                  <p>{project.note}</p>
+                  <p>{pick(project.note)}</p>
                 </div>
               )}
 
@@ -195,7 +200,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
               {/* Descripción corta */}
               <p className="text-base text-on-surface-variant">
-                {project.description}
+                {pick(project.description)}
               </p>
 
               {/* Descripción larga */}
@@ -203,21 +208,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <>
                   <hr className="my-6 border-outline-variant/40" />
                   <p className="whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">
-                    {project.longDescription}
+                    {pick(project.longDescription)}
                   </p>
                 </>
               )}
 
               {/* Features */}
-              {project.features && project.features.length > 0 && (
+              {features && features.length > 0 && (
                 <>
                   <hr className="my-6 border-outline-variant/40" />
                   <div>
                     <h3 className="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                      Funcionalidades
+                      {t.projects.featuresTitle}
                     </h3>
                     <ul className="flex flex-col gap-2">
-                      {project.features.map((feature, idx) => (
+                      {features.map((feature, idx) => (
                         <li
                           key={idx}
                           className="flex items-start gap-3 text-sm text-on-surface-variant"
@@ -245,14 +250,14 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   className="inline-flex items-center gap-2 rounded-sm border border-outline-variant px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 >
                   <Github size={16} aria-hidden="true" />
-                  Código
+                  {t.projects.code}
                 </a>
               )}
               {project.demoUrl && (() => {
                 // Detecta si el enlace apunta a un archivo descargable (APK, ZIP, etc.)
                 // para cambiar el icono y el texto del botón.
                 const isDownload = /\.(apk|zip|tar|gz|rar|exe|dmg)$/i.test(project.demoUrl);
-                const label = isDownload ? "Descargar APK" : "Demo";
+                const label = isDownload ? t.projects.downloadApk : t.projects.demo;
                 return (
                   <a
                     href={project.demoUrl}
@@ -286,6 +291,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
  * comportamiento en un mismo archivo conceptual.
  */
 export function ProjectMoreInfoButton({ onClick }: { onClick: () => void }) {
+  const { t } = useLang();
   return (
     <button
       type="button"
@@ -293,7 +299,7 @@ export function ProjectMoreInfoButton({ onClick }: { onClick: () => void }) {
       className="mt-4 inline-flex items-center gap-2 self-start rounded-sm border border-outline-variant px-4 py-2 font-mono text-xs font-medium uppercase tracking-widest text-on-surface-variant transition-colors hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
     >
       <Info size={14} aria-hidden="true" />
-      Ver más información
+      {t.projects.moreInfo}
     </button>
   );
 }

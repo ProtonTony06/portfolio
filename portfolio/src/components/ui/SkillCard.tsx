@@ -1,4 +1,5 @@
 import type { SkillCategory } from "../../data/skills";
+import { useLang } from "../../i18n/useLang";
 import { GlassCard } from "./GlassCard";
 
 interface SkillCardProps {
@@ -14,6 +15,7 @@ interface SkillCardProps {
  * Si la categoría no tiene items, muestra mensaje neutro.
  */
 export function SkillCard({ skill }: SkillCardProps) {
+  const { t, pick } = useLang();
   const Icon = skill.icon;
   return (
     <GlassCard padding="lg" interactive className="h-full">
@@ -24,7 +26,7 @@ export function SkillCard({ skill }: SkillCardProps) {
 
       {/* Título: ruta carpeta ~/{categoria}/ */}
       <h3 className="font-mono text-sm font-semibold text-secondary">
-        ~/{skill.category.toLowerCase().replace(/\s+/g, "")}/
+        ~/{pick(skill.category).toLowerCase().replace(/\s+/g, "")}/
       </h3>
 
       {/* Lista de items */}
@@ -45,7 +47,7 @@ export function SkillCard({ skill }: SkillCardProps) {
         </ul>
       ) : (
         <p className="mt-4 text-sm text-on-surface-variant/70">
-          Añade tus tecnologías en{" "}
+          {t.skills.empty}{" "}
           <code className="font-mono text-xs">data/skills.ts</code>.
         </p>
       )}

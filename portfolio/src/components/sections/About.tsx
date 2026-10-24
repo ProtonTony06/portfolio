@@ -5,6 +5,7 @@ import { SectionTitle } from "../ui/SectionTitle";
 import { useFadeUp, useStaggerContainer } from "../../lib/animations";
 import { profile } from "../../data/profile";
 import { skills } from "../../data/skills";
+import { useLang } from "../../i18n/useLang";
 
 const STACK_ICONS = [
   { key: "frontend", label: "Frontend", icon: Code2 },
@@ -20,6 +21,7 @@ const STACK_ICONS = [
  * 4 mini-cards de stack destacado a la derecha. En móvil se apila.
  */
 export function About() {
+  const { t, pick } = useLang();
   const fadeUp = useFadeUp();
   const container = useStaggerContainer(100);
 
@@ -43,15 +45,14 @@ export function About() {
             className="flex flex-col gap-6"
           >
             <motion.div variants={fadeUp}>
-              <SectionTitle eyebrow="Sobre mí" title="Quién soy" />
+              <SectionTitle eyebrow={t.about.eyebrow} title={t.about.title} />
             </motion.div>
 
             <motion.p
               variants={fadeUp}
               className="text-base text-on-surface-variant md:text-lg"
             >
-              {profile.about ||
-                "Aquí irá una descripción sobre ti. Edita data/profile.ts para añadirla."}
+              {pick(profile.about) || t.about.emptyAbout}
             </motion.p>
 
             <motion.div variants={fadeUp}>
@@ -59,10 +60,10 @@ export function About() {
                 <span
                   className="inline-flex cursor-not-allowed items-center gap-2 font-medium text-on-surface-variant/50"
                   aria-disabled="true"
-                  title="Próximamente"
+                  title={t.about.cvComingSoon}
                 >
                   <Download size={18} aria-hidden="true" />
-                  Descargar CV
+                  {t.about.downloadCv}
                 </span>
               ) : (
                 <a
@@ -70,7 +71,7 @@ export function About() {
                   download="CV-Antonio-Cuevas-Lopez.pdf"
                   className="group inline-flex items-center gap-2 font-medium text-primary transition-colors hover:text-secondary"
                 >
-                  Descargar CV
+                  {t.about.downloadCv}
                   <Download
                     size={18}
                     aria-hidden="true"
@@ -94,13 +95,13 @@ export function About() {
               // Si no hay skills, mostramos el label genérico.
               const categoryMap: Record<string, string> = {
                 frontend:
-                  skills.find((s) => s.category === "Frontend")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "frontend")?.items.slice(0, 2).join(" / ") ||
                   "React / Vue",
                 backend:
-                  skills.find((s) => s.category === "Backend")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "backend")?.items.slice(0, 2).join(" / ") ||
                   "Node / Python",
                 tooling:
-                  skills.find((s) => s.category === "Herramientas")?.items.slice(0, 2).join(" / ") ||
+                  skills.find((s) => s.id === "tools")?.items.slice(0, 2).join(" / ") ||
                   "Git / Docker",
                 other: "PostgreSQL / Redis",
               };
