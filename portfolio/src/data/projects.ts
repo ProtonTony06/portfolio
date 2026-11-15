@@ -166,4 +166,43 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/ProtonTony06/form-project",
     year: 2026,
   },
+  {
+    title: "Project_Log",
+    description: {
+      es: "Sistema de logging centralizado: ingesta REST con API key por proyecto (individual o en lotes) y panel web con filtros combinables, streaming en vivo por WebSocket. Spring Boot 3 + PostgreSQL + React.",
+      en: "Centralized logging system: REST ingestion with per-project API keys (single or batched) and a web panel with combinable filters and live WebSocket streaming. Spring Boot 3 + PostgreSQL + React.",
+    },
+    longDescription: {
+      es: "Servicio de ingesta, consulta y streaming en vivo de logs de runtime. Las aplicaciones envían sus logs por POST /api/v1/ingest usando una API key por proyecto (envíos individuales o lotes de 1–200 all-or-nothing); un panel web permite consultarlos y filtrarlos, y los logs que llegan mientras se navega el panel aparecen al instante vía WebSocket.\n\nEl panel es multi-proyecto, con CRUD y archivado de proyectos y API keys regenerables (la clave solo se revela una vez al crearse o regenerarse). La consulta soporta filtros combinables (proyecto, entorno, nivel, rango temporal y texto libre) con paginación keyset, una banda «● En vivo» con deduplicación y reconexión automática, y un detalle con stacktrace completo. Los borrados exigen doble confirmación mediante cabeceras X-Confirm-*.\n\nLa seguridad se apoya en contraseñas Argon2id, JWT HS256 para la sesión y API keys almacenadas solo como hash SHA-256, con CORS multi-origen y handshake de WebSocket validado. Arquitectura Docker Compose de 3 servicios: PostgreSQL 17 → Spring Boot → nginx.\n\nEl desarrollo siguió Spec-Driven Development: 10 cortes con gates de QA y evidencia trazada, y orquestación con agentes de IA. Cubre 225 tests de backend, 86 de frontend y un arnés visual con Playwright.",
+      en: "Runtime log ingestion, query and live streaming service. Applications send their logs via POST /api/v1/ingest using a per-project API key (single submissions or all-or-nothing batches of 1–200); a web panel lets me query and filter them, and logs arriving while the panel is open appear instantly over WebSocket.\n\nThe panel is multi-project, with project CRUD and archiving plus regenerable API keys (the key is only revealed once on creation or regeneration). Queries support combinable filters (project, environment, level, time range and free text) with keyset pagination, an \"● Live\" band with deduplication and automatic reconnection, and a detail view with the full stacktrace. Deletions require double confirmation via X-Confirm-* headers.\n\nSecurity relies on Argon2id passwords, HS256 JWT sessions and API keys stored only as SHA-256 hashes, with multi-origin CORS and a validated WebSocket handshake. Docker Compose architecture with 3 services: PostgreSQL 17 → Spring Boot → nginx.\n\nDevelopment followed Spec-Driven Development: 10 incremental cuts with QA gates and traced evidence, orchestrated with AI agents. It covers 225 backend tests, 86 frontend tests and a Playwright visual harness.",
+    },
+    features: {
+      es: [
+        "Ingesta REST /api/v1/ingest[/batch] con API key por proyecto (lotes de 1–200, all-or-nothing)",
+        "Streaming en tiempo real por WebSocket autenticado (JWT + validación de Origin)",
+        "Consulta con filtros combinables (proyecto, entorno, nivel, rango temporal, texto) y paginación keyset",
+        "Multi-proyecto: CRUD, archivado y API keys regenerables con revelación única",
+        "Seguridad: contraseñas Argon2id, JWT HS256 y borrados con doble confirmación (X-Confirm-*)",
+        "Arquitectura con Docker Compose de 3 servicios: PostgreSQL 17, Spring Boot y nginx",
+      ],
+      en: [
+        "REST ingestion /api/v1/ingest[/batch] with per-project API keys (1–200 batches, all-or-nothing)",
+        "Real-time streaming over authenticated WebSocket (JWT + Origin validation)",
+        "Query with combinable filters (project, environment, level, time range, text) and keyset pagination",
+        "Multi-project: CRUD, archiving and regenerable API keys with one-time reveal",
+        "Security: Argon2id passwords, HS256 JWT and deletions with double confirmation (X-Confirm-*)",
+        "Docker Compose architecture with 3 services: PostgreSQL 17, Spring Boot and nginx",
+      ],
+    },
+    tags: ["Spring Boot", "React", "PostgreSQL", "TypeScript", "Docker", "WebSocket"],
+    imageUrl: "/projects/projectlog-cover.svg",
+    gallery: [
+      "/projects/projectlog-cover.svg",
+      "/projects/projectlog-logs.svg",
+      "/projects/projectlog-streaming.svg",
+      "/projects/projectlog-projects.svg",
+    ],
+    repoUrl: "https://github.com/ProtonTony06/project-log",
+    year: 2026,
+  },
 ];
