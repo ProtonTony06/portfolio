@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Project_Log - Panel de logs">
+  <title>Project_Log - Panel /logs</title>
+  <desc>Mockup del panel de logs con sidebar de proyectos, filtros combinables y tabla de logs con niveles coloreados.</desc>
+
+  <defs>
+    <linearGradient id="bgPLLogs" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#071310"/>
+      <stop offset="1" stop-color="#030706"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bgPLLogs)"/>
+
+  <!-- Ventana terminal -->
+  <rect x="20" y="20" width="1160" height="660" rx="12" fill="#0B1512" stroke="#10B981" stroke-opacity="0.35" stroke-width="1"/>
+
+  <!-- Barra de título -->
+  <rect x="20" y="20" width="1160" height="52" rx="12" fill="#101F1A"/>
+  <rect x="20" y="58" width="1160" height="14" fill="#101F1A"/>
+  <circle cx="55" cy="46" r="7" fill="#EF4444"/>
+  <circle cx="80" cy="46" r="7" fill="#FBBF24"/>
+  <circle cx="105" cy="46" r="7" fill="#22C55E"/>
+  <rect x="440" y="32" width="320" height="28" rx="14" fill="#08100D" stroke="#10B981" stroke-opacity="0.2"/>
+  <text x="600" y="51" text-anchor="middle" fill="#6B8578" font-family="monospace,monospace" font-size="12">localhost:8080/logs</text>
+
+  <!-- Sidebar -->
+  <g transform="translate(20 72)">
+    <rect x="0" y="0" width="220" height="588" fill="#08100D"/>
+    <line x1="220" y1="0" x2="220" y2="588" stroke="#10B981" stroke-opacity="0.2" stroke-width="1"/>
+    <text x="24" y="36" fill="#5CE55A" font-family="monospace,monospace" font-size="14" font-weight="700">project_log</text>
+    <text x="24" y="54" fill="#4E6157" font-family="monospace,monospace" font-size="9" letter-spacing="2">PANEL DE LOGS</text>
+
+    <!-- Navegación -->
+    <g font-family="monospace,monospace" font-size="12">
+      <text x="24" y="100" fill="#6B8578">&#9656; Proyectos</text>
+      <rect x="8" y="116" width="204" height="26" rx="6" fill="#10B981" fill-opacity="0.12"/>
+      <text x="24" y="134" fill="#5CE55A" font-weight="600">&#9656; Logs</text>
+      <text x="24" y="168" fill="#6B8578">&#9656; Streaming</text>
+      <text x="24" y="202" fill="#6B8578">&#9656; Ajustes</text>
+    </g>
+
+    <!-- Lista de proyectos -->
+    <text x="24" y="260" fill="#4E6157" font-family="monospace,monospace" font-size="9" letter-spacing="2">PROYECTOS</text>
+    <g font-family="monospace,monospace" font-size="11">
+      <rect x="8" y="272" width="204" height="24" rx="5" fill="#0B1512"/>
+      <circle cx="24" cy="284" r="3" fill="#10B981"/>
+      <text x="34" y="288" fill="#C8DBC7">portfolio</text>
+      <text x="196" y="288" text-anchor="end" fill="#4E6157">1.4k</text>
+
+      <circle cx="24" cy="316" r="3" fill="#10B981"/>
+      <text x="34" y="320" fill="#C8DBC7">goalapp</text>
+      <text x="196" y="320" text-anchor="end" fill="#4E6157">876</text>
+
+      <circle cx="24" cy="348" r="3" fill="#10B981"/>
+      <text x="34" y="352" fill="#C8DBC7">form-project</text>
+      <text x="196" y="352" text-anchor="end" fill="#4E6157">512</text>
+
+      <circle cx="24" cy="380" r="3" fill="#10B981"/>
+      <text x="34" y="384" fill="#C8DBC7">payment-service</text>
+      <text x="196" y="384" text-anchor="end" fill="#4E6157">3.2k</text>
+
+      <circle cx="24" cy="412" r="3" fill="#4E6157"/>
+      <text x="34" y="416" fill="#6B8578">legacy-api [archi</text>
+      <text x="196" y="416" text-anchor="end" fill="#4E6157">210</text>
+    </g>
+
+    <!-- Footer sidebar -->
+    <text x="24" y="556" fill="#4E6157" font-family="monospace,monospace" font-size="9">paginaci&#243;n keyset &#183; cursor=eyJp</text>
+  </g>
+
+  <!-- Cabecera + filtros -->
+  <g transform="translate(240 72)">
+    <rect x="0" y="0" width="940" height="56" fill="#0B1512"/>
+    <line x1="0" y1="56" x2="940" y2="56" stroke="#10B981" stroke-opacity="0.15" stroke-width="1"/>
+    <text x="24" y="36" fill="#E8F5EE" font-family="monospace,monospace" font-size="17" font-weight="700">Logs</text>
+    <circle cx="826" cy="30" r="5" fill="#22C55E"/>
+    <text x="840" y="34" fill="#5CE55A" font-family="monospace,monospace" font-size="11" font-weight="600">En vivo</text>
+  </g>
+
+  <!-- Filtros combinables -->
+  <g transform="translate(240 140)" font-family="monospace,monospace" font-size="11">
+    <rect x="0" y="0" width="940" height="40" fill="#08100D"/>
+    <line x1="0" y1="40" x2="940" y2="40" stroke="#10B981" stroke-opacity="0.15" stroke-width="1"/>
+    <rect x="16" y="10" width="150" height="20" rx="10" fill="#0B1512" stroke="#10B981" stroke-opacity="0.3"/>
+    <text x="28" y="24" fill="#5CE55A">proyecto: todos &#9662;</text>
+    <rect x="178" y="10" width="136" height="20" rx="10" fill="#0B1512" stroke="#10B981" stroke-opacity="0.3"/>
+    <text x="190" y="24" fill="#5CE55A">entorno: prod &#9662;</text>
+    <rect x="326" y="10" width="120" height="20" rx="10" fill="#0B1512" stroke="#10B981" stroke-opacity="0.3"/>
+    <text x="338" y="24" fill="#5CE55A">nivel: ERROR &#9662;</text>
+    <rect x="458" y="10" width="172" height="20" rx="10" fill="#0B1512" stroke="#10B981" stroke-opacity="0.3"/>
+    <text x="470" y="24" fill="#5CE55A">&#250;ltimas 24h &#9662;</text>
+    <rect x="706" y="10" width="180" height="20" rx="4" fill="#0B1512" stroke="#10B981" stroke-opacity="0.2"/>
+    <text x="718" y="24" fill="#4E6157">buscar texto...</text>
+  </g>
+
+  <!-- Cabecera de tabla -->
+  <g transform="translate(240 196)" font-family="monospace,monospace" font-size="10" letter-spacing="1">
+    <rect x="0" y="0" width="940" height="30" fill="#101F1A"/>
+    <text x="16" y="20" fill="#4E6157">NIVEL</text>
+    <text x="100" y="20" fill="#4E6157">TIMESTAMP</text>
+    <text x="220" y="20" fill="#4E6157">PROYECTO</text>
+    <text x="352" y="20" fill="#4E6157">MENSAJE</text>
+    <text x="924" y="20" text-anchor="end" fill="#4E6157">&#8942;</text>
+  </g>
+
+  <!-- Filas de logs -->
+  <g font-family="monospace,monospace" font-size="11">
+    <g transform="translate(240 226)">
+      <rect x="4" y="0" width="932" height="34" fill="#EF4444" fill-opacity="0.05"/>
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#EF4444" fill-opacity="0.18"/>
+      <text x="22" y="21" fill="#EF4444" font-weight="700" font-size="10">ERROR</text>
+      <text x="100" y="21" fill="#4E6157">10:21:04</text>
+      <text x="220" y="21" fill="#8FA79B">payment-service</text>
+      <text x="352" y="21" fill="#C8DBC7">Timeout esperando confirmación (attempt 3/3)</text>
+    </g>
+    <g transform="translate(240 262)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#EF4444" fill-opacity="0.18"/>
+      <text x="22" y="21" fill="#EF4444" font-weight="700" font-size="10">ERROR</text>
+      <text x="100" y="21" fill="#4E6157">10:20:58</text>
+      <text x="220" y="21" fill="#8FA79B">goalapp</text>
+      <text x="352" y="21" fill="#C8DBC7">Fallo de conexión con Realtime, reintentando</text>
+    </g>
+    <g transform="translate(240 298)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#FBBF24" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#FBBF24" font-weight="700" font-size="10">WARN</text>
+      <text x="100" y="21" fill="#4E6157">10:20:51</text>
+      <text x="220" y="21" fill="#8FA79B">api-gateway</text>
+      <text x="352" y="21" fill="#C8DBC7">Rate limit al 92% del umbral por IP</text>
+    </g>
+    <g transform="translate(240 334)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#22C55E" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#22C55E" font-weight="700" font-size="10">INFO</text>
+      <text x="100" y="21" fill="#4E6157">10:20:47</text>
+      <text x="220" y="21" fill="#8FA79B">form-project</text>
+      <text x="352" y="21" fill="#C8DBC7">Lote de 32 logs ingestado correctamente</text>
+    </g>
+    <g transform="translate(240 370)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#5CE55A" fill-opacity="0.08"/>
+      <text x="22" y="21" fill="#5CE55A" font-weight="700" font-size="10">DEBUG</text>
+      <text x="100" y="21" fill="#4E6157">10:20:44</text>
+      <text x="220" y="21" fill="#8FA79B">portfolio</text>
+      <text x="352" y="21" fill="#6B8578">cache hit ratio 0.97 en /api/fichas</text>
+    </g>
+    <g transform="translate(240 406)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#EF4444" fill-opacity="0.18"/>
+      <text x="22" y="21" fill="#EF4444" font-weight="700" font-size="10">ERROR</text>
+      <text x="100" y="21" fill="#4E6157">10:20:39</text>
+      <text x="220" y="21" fill="#8FA79B">payment-service</text>
+      <text x="352" y="21" fill="#C8DBC7">NullPointerException en Reconciler.run()</text>
+    </g>
+    <g transform="translate(240 442)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#22C55E" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#22C55E" font-weight="700" font-size="10">INFO</text>
+      <text x="100" y="21" fill="#4E6157">10:20:35</text>
+      <text x="220" y="21" fill="#8FA79B">project-log</text>
+      <text x="352" y="21" fill="#C8DBC7">API key regenerada para proyecto goalapp</text>
+    </g>
+    <g transform="translate(240 478)">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#22C55E" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#22C55E" font-weight="700" font-size="10">INFO</text>
+      <text x="100" y="21" fill="#4E6157">10:20:30</text>
+      <text x="220" y="21" fill="#8FA79B">portfolio</text>
+      <text x="352" y="21" fill="#C8DBC7">Deploy v1.4.2 finalizado en 42s</text>
+    </g>
+    <g transform="translate(240 514)" opacity="0.55">
+      <rect x="16" y="8" width="46" height="17" rx="3" fill="#FBBF24" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#FBBF24" font-weight="700" font-size="10">WARN</text>
+      <text x="100" y="21" fill="#4E6157">10:20:27</text>
+      <text x="220" y="21" fill="#8FA79B">api-gateway</text>
+      <text x="352" y="21" fill="#6B8578">Latencia p99 &gt; 400ms &#250;ltimos 5 min</text>
+    </g>
+  </g>
+
+  <!-- Banda en vivo inferior -->
+  <g transform="translate(240 590)">
+    <rect x="0" y="0" width="940" height="42" fill="#08100D"/>
+    <line x1="0" y1="0" x2="940" y2="0" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1"/>
+    <circle cx="28" cy="21" r="5" fill="#22C55E"/>
+    <circle cx="28" cy="21" r="10" fill="#22C55E" fill-opacity="0.2"/>
+    <text x="48" y="26" fill="#5CE55A" font-family="monospace,monospace" font-size="13" font-weight="600" letter-spacing="1">En vivo</text>
+    <text x="200" y="26" fill="#4E6157" font-family="monospace,monospace" font-size="10">+7 logs deduplicados &#183; WS reconexi&#243;n autom&#225;tica</text>
+    <text x="924" y="26" text-anchor="end" fill="#5CE55A" font-family="monospace,monospace" font-size="11">&#9662;</text>
+  </g>
+
+  <!-- Paginación -->
+  <text x="1000" y="716" text-anchor="end" fill="#4E6157" font-family="monospace,monospace" font-size="10">anterior &#183; cursor &#8594; siguiente</text>
+
+  <!-- Pie -->
+  <text x="600" y="730" text-anchor="middle" fill="#4E6157" font-family="monospace,monospace" font-size="10" letter-spacing="3">MOCKUP · PROJECT_LOG PANEL /LOGS</text>
+</svg>

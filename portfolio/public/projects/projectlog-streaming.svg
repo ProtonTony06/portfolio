@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Project_Log - Streaming en vivo">
+  <title>Project_Log - Streaming en vivo</title>
+  <desc>Mockup de la banda en vivo con indicador pulsante y flujo de logs entrando en tiempo real por WebSocket.</desc>
+
+  <defs>
+    <linearGradient id="bgPLLive" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#071310"/>
+      <stop offset="1" stop-color="#030706"/>
+    </linearGradient>
+
+    <radialGradient id="liveGlowPL" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#22C55E" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="livePulsePL" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#22C55E" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#0E5F2F" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bgPLLive)"/>
+  <circle cx="600" cy="120" r="300" fill="url(#liveGlowPL)"/>
+
+  <!-- Ventana terminal -->
+  <rect x="80" y="60" width="1040" height="580" rx="12" fill="#0B1512" stroke="#10B981" stroke-opacity="0.4" stroke-width="1.5"/>
+
+  <!-- Barra de título -->
+  <rect x="80" y="60" width="1040" height="44" rx="12" fill="#101F1A"/>
+  <rect x="80" y="90" width="1040" height="14" fill="#101F1A"/>
+  <circle cx="112" cy="82" r="6" fill="#EF4444"/>
+  <circle cx="134" cy="82" r="6" fill="#FBBF24"/>
+  <circle cx="156" cy="82" r="6" fill="#22C55E"/>
+  <text x="600" y="87" text-anchor="middle" fill="#6B8578" font-family="monospace,monospace" font-size="11">localhost:8080/logs &#8212; streaming</text>
+
+  <!-- Header con estado WS -->
+  <g transform="translate(80 104)" font-family="monospace,monospace">
+    <rect x="0" y="0" width="1040" height="48" fill="#08100D"/>
+    <line x1="0" y1="48" x2="1040" y2="48" stroke="#10B981" stroke-opacity="0.2" stroke-width="1"/>
+    <text x="24" y="30" fill="#E8F5EE" font-size="15" font-weight="700">Logs &#8212; streaming en vivo</text>
+    <circle cx="906" cy="24" r="4" fill="#22C55E"/>
+    <circle cx="906" cy="24" r="9" fill="#22C55E" fill-opacity="0.2"/>
+    <text x="920" y="29" fill="#5CE55A" font-size="10">WS conectado</text>
+    <text x="1016" y="29" text-anchor="end" fill="#4E6157" font-size="10" opacity="0.8">&#8594;</text>
+  </g>
+
+  <!-- Flujo de logs entrando (desvanecido hacia arriba = nuevo) -->
+  <g font-family="monospace,monospace" font-size="12">
+    <!-- Entrando ahora: máx resalte -->
+    <g transform="translate(104 470)">
+      <rect x="0" y="0" width="992" height="38" rx="6" fill="#22C55E" fill-opacity="0.08" stroke="#22C55E" stroke-opacity="0.35" stroke-width="1"/>
+      <rect x="16" y="10" width="46" height="17" rx="3" fill="#EF4444" fill-opacity="0.2"/>
+      <text x="22" y="23" fill="#EF4444" font-weight="700" font-size="10">ERROR</text>
+      <text x="76" y="23" fill="#4E6157" font-size="10">10:22:01</text>
+      <text x="158" y="23" fill="#C8DBC7">payment-service &#8220;Reintento agotado, enviando a DLQ&#8221;</text>
+      <text x="964" y="23" text-anchor="end" fill="#5CE55A" font-size="10">nuevo</text>
+    </g>
+
+    <g transform="translate(104 420)" opacity="0.85">
+      <rect x="16" y="8" width="44" height="17" rx="3" fill="#22C55E" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#22C55E" font-weight="700" font-size="10">INFO</text>
+      <text x="76" y="21" fill="#4E6157" font-size="10">10:22:00</text>
+      <text x="158" y="21" fill="#C8DBC7">project-log &#8220;Lote 1–200 verificado: 200/200 OK&#8221;</text>
+    </g>
+
+    <g transform="translate(104 370)" opacity="0.65">
+      <rect x="16" y="8" width="44" height="17" rx="3" fill="#FBBF24" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#FBBF24" font-weight="700" font-size="10">WARN</text>
+      <text x="76" y="21" fill="#4E6157" font-size="10">10:21:56</text>
+      <text x="158" y="21" fill="#BFC9C3">api-gateway &#8220;Cola de ingesta &gt; 500, throttle on&#8221;</text>
+    </g>
+
+    <g transform="translate(104 320)" opacity="0.5">
+      <rect x="16" y="8" width="44" height="17" rx="3" fill="#5CE55A" fill-opacity="0.08"/>
+      <text x="22" y="21" fill="#5CE55A" font-weight="700" font-size="10">DEBUG</text>
+      <text x="76" y="21" fill="#4E6157" font-size="10">10:21:52</text>
+      <text x="158" y="21" fill="#8FA79B">portfolio &#8220;WS handshake validado, origin OK&#8221;</text>
+    </g>
+
+    <g transform="translate(104 270)" opacity="0.35">
+      <rect x="16" y="8" width="44" height="17" rx="3" fill="#22C55E" fill-opacity="0.15"/>
+      <text x="22" y="21" fill="#22C55E" font-weight="700" font-size="10">INFO</text>
+      <text x="76" y="21" fill="#4E6157" font-size="10">10:21:48</text>
+      <text x="158" y="21" fill="#6B8578">form-project &#8220;Respuesta nueva recibida (f/soporte)&#8221;</text>
+    </g>
+  </g>
+
+  <!-- Flechas de flujo descendente -->
+  <g stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.35" fill="none">
+    <path d="M1100 180 L1100 250 M1094 242 L1100 250 L1106 242" stroke-linecap="round"/>
+    <path d="M1100 280 L1100 350 M1094 342 L1100 350 L1106 342"/>
+    <path d="M1100 380 L1100 450 M1094 442 L1100 450 L1106 442"/>
+  </g>
+
+  <!-- Banda "● En vivo" -->
+  <g transform="translate(80 534)">
+    <rect x="0" y="0" width="1040" height="106" fill="url(#livePulsePL)" fill-opacity="0.35"/>
+    <rect x="0" y="0" width="1040" height="106" fill="#08100D" fill-opacity="0.55"/>
+    <line x1="0" y1="0" x2="1040" y2="0" stroke="#22C55E" stroke-opacity="0.5" stroke-width="1.5"/>
+
+    <circle cx="60" cy="53" r="8" fill="#22C55E"/>
+    <circle cx="60" cy="53" r="17" fill="none" stroke="#22C55E" stroke-opacity="0.5" stroke-width="2"/>
+    <circle cx="60" cy="53" r="30" fill="none" stroke="#22C55E" stroke-opacity="0.18" stroke-width="2"/>
+    <text x="100" y="46" fill="#FFFFFF" font-family="monospace,monospace" font-size="20" font-weight="800" letter-spacing="1">&#9679; En vivo</text>
+    <text x="100" y="70" fill="#5CE55A" font-family="monospace,monospace" font-size="11">los logs nuevos aparecen al instante v&#237;a WebSocket</text>
+
+    <!-- Métricas en vivo -->
+    <g font-family="monospace,monospace" text-anchor="end">
+      <text x="760" y="46" fill="#C8DBC7" font-size="11">dedup</text>
+      <text x="760" y="64" fill="#5CE55A" font-size="14" font-weight="700">3 filtrados</text>
+      <text x="920" y="46" fill="#C8DBC7" font-size="11">rx/s</text>
+      <text x="920" y="64" fill="#5CE55A" font-size="14" font-weight="700">12</text>
+      <text x="1030" y="46" fill="#C8DBC7" font-size="11">uptime</text>
+      <text x="1030" y="64" fill="#5CE55A" font-size="14" font-weight="700">99.98%</text>
+    </g>
+  </g>
+
+  <!-- Pie -->
+  <text x="600" y="728" text-anchor="middle" fill="#4E6157" font-family="monospace,monospace" font-size="10" letter-spacing="3">MOCKUP · PROJECT_LOG BANDA EN VIVO (WEBSOCKET)</text>
+</svg>
